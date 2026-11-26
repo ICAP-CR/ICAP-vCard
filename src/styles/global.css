@@ -518,588 +518,622 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===================================================================
-   Biblioteca de Áreas de Especialización (SpecializationAreas.jsx), en
-   la línea de la versión "Biblioteca" de la página web: un librero navy
-   con nichos, lomos de tela con filetes, y el área elegida como un libro
-   abierto de papel con tipografía de libro (Source Serif). Al pasar de
-   un área a otra se da vuelta una hoja.
+   Áreas de Especialización (SpecializationAreas.jsx): fichero de
+   tarjetas celestes + el área elegida como una ficha de archivero que
+   sale de un cajón (FichaCatalogo.jsx), con el escudo como marca de agua. El
+   librero y el libro abierto quedaron guardados en
+   _respaldos/biblioteca-areas/ para la página web.
    =================================================================== */
-.bib {
-  --serif: 'Source Serif 4', Georgia, serif;
-  --papel: #FAF7F0;
-  --papel-izq: #F3EFE6;
-  --tinta-libro: #262B33;
-  --gris-libro: #6B6457;
-  --suave-libro: cubic-bezier(0.45, 0.05, 0.25, 1);
-}
-
-/* El librero: mueble navy con cuatro nichos (2 × 2), cornisa arriba y
-   zócalo abajo un poco más anchos que el mueble. */
-.bib-librero {
-  position: relative;
-  margin: 14px 10px 18px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  padding: 12px;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #0B4277 0%, #003366 40%, #022B54 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 46px 60px -44px rgba(0, 31, 61, 0.75);
-}
-.bib-librero::before,
-.bib-librero::after {
-  content: '';
-  position: absolute;
-  left: -10px;
-  right: -10px;
-  border-radius: 3px;
-  background: #001F3D;
-}
-.bib-librero::before {
-  top: -12px;
-  height: 14px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
-}
-.bib-librero::after {
-  bottom: -16px;
-  height: 18px;
-  left: -4px;
-  right: -4px;
-}
-
-.bib-nicho {
-  position: relative;
-  height: 13rem;
-  padding: 0 6px;
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #D3E5F4 0%, #EAF3FB 100%);
-  /* sombra del techo y de los costados del nicho */
+/* Fichero de tarjetas de Áreas (SpecializationAreas.jsx): las tarjetas
+   celestes de la versión anterior. La "ilusión 3D" sale de las sombras
+   (realce blanco arriba, sombra abajo); la elegida lleva anillo blanco
+   y, desde lg, se corre un poco hacia la ficha de catálogo. */
+.ficha-area {
   box-shadow:
-    inset 0 22px 24px -18px rgba(0, 31, 61, 0.5),
-    inset 14px 0 18px -16px rgba(0, 31, 61, 0.4),
-    inset -14px 0 18px -16px rgba(0, 31, 61, 0.4);
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 1px 2px rgba(1, 20, 42, 0.12),
+    0 10px 18px -10px rgba(1, 20, 42, 0.3),
+    0 22px 34px -20px rgba(1, 20, 42, 0.34);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
-.bib-libro-btn,
-.bib-relleno {
-  padding: 0;
-  border: 0;
-  background: none;
-  margin: 0 1px;
-  display: flex;
-  align-items: flex-end;
+.ficha-area:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 4px rgba(1, 20, 42, 0.14),
+    0 16px 24px -12px rgba(1, 20, 42, 0.34),
+    0 32px 46px -22px rgba(1, 20, 42, 0.4);
 }
-.bib-libro-btn {
-  cursor: pointer;
+.ficha-area[aria-pressed='true'] {
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 5px rgba(79, 178, 242, 0.45),
+    0 18px 30px -14px rgba(1, 20, 42, 0.55);
 }
-.bib-libro-btn:focus {
+.ficha-area:focus {
   outline: none;
 }
-
-/* Lomo de tela: el color un poco apagado, trama fina y filetes. */
-.bib-lomo {
-  --tela: color-mix(in srgb, var(--c), #1C2430 22%);
-  position: relative;
-  width: calc(var(--ancho) * var(--escala, 1));
-  height: calc(var(--alto) * var(--escala-alto, 1));
-  padding: 12px 0 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--tinta);
-  border-radius: 3px 3px 2px 2px;
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 4px),
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--tela), #000 30%) 0%,
-      var(--tela) 14%,
-      color-mix(in srgb, var(--tela), #fff 10%) 42%,
-      var(--tela) 72%,
-      color-mix(in srgb, var(--tela), #000 30%) 100%
-    );
-  box-shadow: 0 8px 12px -8px rgba(0, 31, 61, 0.7);
-  transform: translateY(var(--sube, 0));
-  transition: transform 0.6s var(--suave-libro), box-shadow 0.6s;
+.ficha-area:focus-visible {
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 5px #4FB2F2;
 }
-.bib-lomo-banda {
-  width: 100%;
-  height: 6px;
-  flex: none;
-  border-block: 1px solid color-mix(in srgb, var(--tinta) 40%, transparent);
-}
-.bib-lomo-titulo {
-  flex: 1;
-  min-height: 0;
-  max-width: 100%;
-  overflow: hidden;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--serif);
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.08;
-  text-align: center;
-}
-.bib-lomo svg {
-  width: 14px;
-  height: 14px;
-  flex: none;
-  opacity: 0.8;
-}
-.bib-libro-btn:focus-visible .bib-lomo {
-  --sube: -6px;
-  outline: 2px solid #4FB2F2;
-  outline-offset: 2px;
-}
-/* El libro elegido queda un poco afuera del estante */
-.bib-libro-btn[aria-pressed='true'] .bib-lomo {
-  --sube: -18px;
-  box-shadow: 0 18px 18px -12px rgba(0, 31, 61, 0.7);
+@media (min-width: 1024px) {
+  .ficha-area[aria-pressed='true'] {
+    transform: translateX(6px);
+  }
 }
 
-/* Salto: al pasar el mouse cada libro da un saltito completo aunque el
-   mouse ya se haya ido; pasar rápido por varios deja una estela. Va con
-   `translate`/`rotate` para sumarse al `transform` del lomo. */
-.bib-saltando .bib-lomo {
-  animation: bibSalto 0.75s cubic-bezier(0.3, 0.6, 0.3, 1) var(--demora, 0ms) backwards;
+/* Saltito al pasar el mouse: completo aunque el mouse ya se haya ido, así
+   pasar rápido por varias deja una estela. Va con `translate` para
+   sumarse al `transform` de la elegida. */
+.ficha-salta {
+  animation: fichaSalto 0.6s cubic-bezier(0.3, 0.6, 0.3, 1);
 }
-@keyframes bibSalto {
-  0% { translate: 0 0; rotate: 0deg; }
-  32% { translate: 0 -30px; rotate: -3deg; }
-  62% { translate: 0 4px; rotate: 1deg; }
-  80% { translate: 0 -5px; rotate: 0deg; }
+@keyframes fichaSalto {
+  0% { translate: 0 0; }
+  35% { translate: 0 -7px; }
+  65% { translate: 0 1px; }
+  82% { translate: 0 -2px; }
   100% { translate: 0 0; }
 }
 
-/* Libros de relleno: sin nombre, sólo el isotipo del ICAP en el lomo */
-.bib-relleno .bib-lomo {
-  --tela: color-mix(in srgb, var(--c), #1C2430 12%);
-  transition: opacity 0.5s, filter 0.5s;
-}
-/* Mientras se resaltan las áreas, los de relleno se apagan */
-.bib-librero.resaltando .bib-relleno .bib-lomo {
-  opacity: 0.35;
-  filter: saturate(0.3);
-}
-
-/* Los de relleno son botones: con el mouse encima no saltan, sólo el
-   isotipo brilla un poco para llamar la atención; al tocarlos hacen
-   saltar las áreas (ver resaltar en SpecializationAreas.jsx). */
-.bib-relleno {
-  cursor: pointer;
-}
-.bib-relleno:focus {
-  outline: none;
-}
-.bib-relleno:focus-visible .bib-lomo {
-  outline: 2px solid #4FB2F2;
-  outline-offset: 2px;
-}
-.bib-relleno img {
-  transition: opacity 0.4s, filter 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.bib-relleno:hover img,
-.bib-relleno:focus-visible img {
-  opacity: 1;
-  transform: scale(1.2);
-  filter: brightness(0) invert(1) drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 6px rgba(191, 230, 255, 0.95)) drop-shadow(0 0 12px rgba(79, 178, 242, 0.9));
-}
-.bib-relleno.claro:hover img,
-.bib-relleno.claro:focus-visible img {
-  opacity: 1;
-  filter: drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 12px rgba(0, 119, 200, 0.8));
-}
-.bib-relleno img {
-  width: min(16px, 60%);
-  margin-block: auto;
-  opacity: 0.5;
-  filter: brightness(0) invert(1);
-}
-.bib-relleno.claro img {
-  filter: none;
-  opacity: 0.55;
+/* --- Archivero (FichaCatalogo.jsx) -------------------------------------
+   Con la paleta y las tipografías del brochure: ficha blanca con un toque
+   celeste, títulos en Raleway, texto en Open Sans y rótulos en IBM Plex
+   Mono; cajón navy como los bloques oscuros del resto del sitio. */
+.cat {
+  --oculto: 2.4rem; /* lo que queda de la ficha dentro del cajón */
+  --navy: #003366;
+  --azul: #0077C8;
+  --celeste: #4FB2F2;
 }
 
-/* --- El libro abierto ------------------------------------------------- */
-.bib-libro {
+.cat-escena {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  perspective: 2200px;
 }
-.bib-cara-der,
-.bib-cara-izq {
-  color: var(--tinta-libro);
-  font-family: var(--serif);
-}
-.bib-cara-der {
+
+/* Fila de pestañas en orden (ver LUGARES en FichaCatalogo.jsx). Cada una
+   se ubica según su lugar y se desliza cuando cambia. */
+.cat-pestanas {
   position: relative;
-  padding: 1.5rem 1.75rem 1.6rem;
-  background: var(--papel);
-  border-radius: 0 6px 6px 0;
-  box-shadow: inset 22px 0 26px -22px rgba(40, 30, 10, 0.35);
+  z-index: 3;
+  height: 2.15rem;
+  margin: 0 5%;
 }
-.bib-cara-izq {
-  position: relative;
-  overflow: hidden;
-  padding: 2rem 1.6rem;
-  border-radius: 6px 0 0 6px;
-  background: var(--papel-izq);
-  display: flex;
-  flex-direction: column;
+.cat-pestana {
+  position: absolute;
+  bottom: -2px;
+  height: 2rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  text-align: center;
-  box-shadow: inset -22px 0 26px -22px rgba(40, 30, 10, 0.35);
+  gap: 0.4rem;
+  padding: 0 0.7rem 2px;
+  border: 0;
+  border-radius: 10px 10px 0 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--navy);
+  background: linear-gradient(180deg, #FFFFFF, #EAF3FB);
+  box-shadow: inset 0 3px 0 var(--c), 0 0 0 1px rgba(0, 51, 102, 0.1), 0 -2px 8px -4px rgba(0, 31, 61, 0.25);
+  cursor: pointer;
+  animation: catPestanaEntra 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s;
 }
-/* Las páginas fijas llevan el canto de las hojas de abajo y la sombra */
-.bib-pagina-der {
-  box-shadow:
-    inset 22px 0 26px -22px rgba(40, 30, 10, 0.35),
-    2px 2px 0 #ECE6D8,
-    4px 4px 0 #E2DACA,
-    14px 20px 44px -18px rgba(0, 0, 0, 0.55);
+.cat-pestana svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--c);
 }
-.bib-pagina-izq {
-  box-shadow:
-    inset -22px 0 26px -22px rgba(40, 30, 10, 0.35),
-    -2px 2px 0 #ECE6D8,
-    -4px 4px 0 #E2DACA,
-    -14px 20px 44px -18px rgba(0, 0, 0, 0.45);
+.cat-pestana:hover {
+  transform: translateY(-3px);
+}
+/* Lugar de cada pestaña: las de los costados más chicas y apagadas */
+.cat-pestana[data-lugar='-2'] {
+  left: 0;
+  width: 15%;
+  opacity: 0.55;
+}
+.cat-pestana[data-lugar='-1'] {
+  left: 16.5%;
+  width: 15%;
+  opacity: 0.85;
+}
+.cat-pestana[data-lugar='0'] {
+  left: 33%;
+  width: 34%;
+}
+.cat-pestana[data-lugar='1'] {
+  left: 68.5%;
+  width: 15%;
+  opacity: 0.85;
+}
+.cat-pestana[data-lugar='2'] {
+  left: 85%;
+  width: 15%;
+  opacity: 0.55;
+}
+.cat-pestana.actual {
+  height: 2.25rem;
+  color: var(--t);
+  background: var(--c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 -4px 12px -6px rgba(0, 31, 61, 0.45);
+  cursor: default;
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.76rem;
+  letter-spacing: 0.01em;
+  transition:
+    left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.4s,
+    opacity 0.4s;
+}
+.cat-pestana.actual svg {
+  color: currentColor;
+}
+.cat-pestana.actual:hover {
+  transform: none;
+}
+.cat-pestana-nombre {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes catPestanaEntra {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
-.bib-cabecera {
-  display: block;
+/* Las fichas (de atrás, la actual, las copias invisibles y la que se va)
+   comparten la misma celda: así la pila toma el alto de la más larga. */
+.cat-pila {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0 5%;
+  perspective: 1600px;
+}
+.cat-pila > * {
+  grid-area: 1 / 1;
+}
+
+.cat-ficha {
+  position: relative;
+  border-radius: 6px 6px 14px 14px;
+  padding: 1.05rem 1.5rem calc(var(--oculto) + 1.3rem);
+  color: #334155;
+  background:
+    radial-gradient(120% 70% at 100% 0%, rgba(79, 178, 242, 0.1), transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, #F6FAFE 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 51, 102, 0.08),
+    0 2px 4px rgba(0, 31, 61, 0.05),
+    0 24px 40px -24px rgba(0, 31, 61, 0.45);
+}
+/* Filete del color del área, arriba de la ficha */
+.cat-ficha::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(90deg, var(--c, var(--azul)), color-mix(in srgb, var(--c, var(--azul)) 35%, #FFFFFF));
+  transition: background 0.4s;
+}
+.cat-fantasma {
+  visibility: hidden;
+}
+
+/* Fichas de atrás: apenas asoman */
+.cat-atras {
+  min-height: 100%;
+  background: linear-gradient(180deg, #EEF5FC, #E2EDF8);
+}
+.cat-atras::before {
+  display: none;
+}
+.cat-atras-1 {
+  transform: translateY(-0.45rem) scale(0.975);
+}
+.cat-atras-2 {
+  transform: translateY(-0.85rem) scale(0.95);
+  filter: brightness(0.97);
+}
+
+/* La ficha actual: se inclina con el mouse y se arrastra de lado */
+.cat-mov {
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  will-change: transform;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.cat-mov.arrastrando {
+  cursor: grabbing;
+}
+.cat-activa {
+  min-height: 100%;
+}
+.cat-activa.entra {
+  animation: catEntra 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes catEntra {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Marca de agua: el escudo del ICAP tenue sobre la hoja. Aparece una sola
+   vez, al entrar a la sección (vive fuera de la ficha que cambia). */
+.cat-marca {
+  position: absolute;
+  z-index: 3;
+  right: -1.2rem;
+  bottom: calc(var(--oculto) - 1.4rem);
+  width: 12rem;
+  opacity: 0.06;
+  transform: rotate(-8deg);
+  pointer-events: none;
+  animation: catMarca 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+@keyframes catMarca {
+  from {
+    opacity: 0;
+    transform: rotate(-14deg) scale(1.12);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 0.06;
+    transform: rotate(-8deg);
+    filter: none;
+  }
+}
+
+/* Al cambiar de área el contenido se descubre: el nombre con un barrido
+   de izquierda a derecha y lo demás entra escalonado. */
+.cat-contenido.revela .cat-cabecera {
+  animation: catSube 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.cat-contenido.revela .cat-titulo {
+  animation: catBarrido 0.8s cubic-bezier(0.65, 0, 0.35, 1) 0.1s both;
+}
+.cat-contenido.revela .cat-desc {
+  animation: catSube 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+.cat-contenido.revela .cat-rotulo {
+  animation: catSube 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+}
+.cat-contenido.revela .cat-recientes li {
+  animation: catSube 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.52s + var(--k, 0) * 0.08s);
+}
+.cat-contenido.revela .cat-pie {
+  animation: catSube 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.78s both;
+}
+@keyframes catSube {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes catBarrido {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.2;
+    transform: translateX(-6px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Brillo que sigue al mouse */
+.cat-brillo {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--gx, 30%) var(--gy, 10%), rgba(255, 255, 255, 0.7), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.cat-mov:hover .cat-brillo {
+  opacity: 0.6;
+}
+
+/* La ficha que se va: se hunde en el cajón hacia un lado */
+.cat-sale {
+  z-index: 3;
+  pointer-events: none;
+  animation: 0.55s cubic-bezier(0.55, 0, 0.75, 0.2) forwards;
+}
+.cat-sale.izq {
+  animation-name: catSaleIzq;
+}
+.cat-sale.der {
+  animation-name: catSaleDer;
+}
+@keyframes catSaleIzq {
+  from {
+    transform: translateX(var(--desde, 0px)) rotate(var(--giro, 0deg));
+  }
+  to {
+    transform: translate(calc(var(--desde, 0px) - 30%), 70%) rotate(-8deg);
+    opacity: 0;
+  }
+}
+@keyframes catSaleDer {
+  from {
+    transform: translateX(var(--desde, 0px)) rotate(var(--giro, 0deg));
+  }
+  to {
+    transform: translate(calc(var(--desde, 0px) + 30%), 70%) rotate(8deg);
+    opacity: 0;
+  }
+}
+
+/* Contenido */
+.cat-contenido {
+  position: relative;
+}
+.cat-cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
   padding-bottom: 0.6rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(38, 43, 51, 0.15);
-  text-align: center;
-  font-size: 0.75rem;
-  font-style: italic;
-  color: var(--gris-libro);
-}
-.bib-cara-der h3 {
-  font-family: var(--serif);
-  font-size: 1.55rem;
-  font-weight: 600;
-  line-height: 1.12;
-  color: #003366;
-  margin-bottom: 0.8rem;
-}
-.bib-capitular {
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-.bib-capitular::first-letter {
-  float: left;
-  margin: 6px 8px 0 0;
-  font-size: 3.2em;
-  font-weight: 600;
-  line-height: 0.78;
-  color: #003366;
-}
-.bib-cara-der h4 {
-  margin-top: 1.1rem;
-  padding-bottom: 0.45rem;
-  font-family: 'Open Sans', system-ui, sans-serif;
-  font-size: 0.66rem;
-  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 51, 102, 0.1);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gris-libro);
+  color: var(--azul);
 }
-.bib-recientes {
+.cat-titulo {
+  margin-top: 0.9rem;
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--navy);
+}
+.cat-desc {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #475569;
+}
+.cat-rotulo {
+  display: block;
+  margin-top: 1.1rem;
+  margin-bottom: 0.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+.cat-recientes ol {
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 0.86rem;
 }
-.bib-recientes li {
+.cat-recientes li {
   display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.35rem 0;
-  border-top: 1px solid rgba(38, 43, 51, 0.12);
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  margin-top: 0.3rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(0, 51, 102, 0.08);
+  background: rgba(234, 243, 251, 0.7);
+  font-size: 0.78rem;
+  color: #334155;
 }
-.bib-recientes li:last-child {
-  border-bottom: 1px solid rgba(38, 43, 51, 0.12);
+.cat-recientes li::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c, var(--azul));
 }
-.bib-recientes li > span:first-child {
+.cat-recientes li > span:first-child {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.bib-recientes li > span:last-child {
-  font-size: 0.8rem;
-  color: var(--gris-libro);
-  font-variant-numeric: tabular-nums;
+.cat-recientes li > span:last-child {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: #64748B;
 }
-.bib-enlace {
+.cat-pie {
+  margin-top: 0.9rem;
+}
+.cat-enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0;
   border: 0;
   background: none;
-  font-family: var(--serif);
-  font-size: 0.88rem;
-  font-style: italic;
-  color: #003366;
-  text-align: left;
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--azul);
   cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: rgba(0, 51, 102, 0.3);
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.3s;
 }
-.bib-enlace:hover {
-  text-decoration-color: currentColor;
+.cat-enlace:hover {
+  color: var(--navy);
 }
-.bib-enlace svg {
-  display: inline;
+.cat-enlace svg {
   width: 15px;
   height: 15px;
-  margin-left: 4px;
-  vertical-align: -2px;
   transition: transform 0.3s;
 }
-.bib-enlace:hover svg {
+.cat-enlace:hover svg {
   transform: translateX(3px);
 }
 
-.bib-cara-izq small {
-  font-family: 'Open Sans', system-ui, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gris-libro);
+/* Cajón: el navy institucional, con un filo de luz arriba, una etiqueta
+   clara con el número y los botones redondos del sitio para pasar. */
+.cat-cajon {
+  position: relative;
+  z-index: 5;
+  margin-top: calc(var(--oculto) * -1);
+  height: 3.9rem;
+  padding: 0 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-radius: 14px;
+  background:
+    radial-gradient(60% 120% at 50% -20%, rgba(79, 178, 242, 0.28), transparent 60%),
+    linear-gradient(160deg, #0B5A96 0%, #003366 55%, #001F3D 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0, 20, 40, 0.2),
+    0 22px 36px -20px rgba(0, 20, 40, 0.7);
 }
-.bib-filete {
-  width: 44px;
-  height: 2px;
-  background: var(--c);
-}
-.bib-cara-izq strong {
-  font-family: var(--serif);
-  font-size: 1.75rem;
-  font-weight: 600;
-  line-height: 1.12;
-  color: #003366;
+.cat-placa {
+  flex: 1;
   max-width: 15rem;
+  margin: 0 auto;
+  padding: 0.3rem 1rem 0.35rem;
+  border-radius: 10px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
-.bib-cara-izq svg {
-  width: 26px;
-  height: 26px;
-  color: var(--gris-libro);
+.cat-placa span {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9FC6E8;
 }
-.bib-cara-izq em {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 1.4rem;
-  font-size: 0.7rem;
-  color: #8A8273;
+.cat-placa strong {
+  display: block;
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: #FFFFFF;
 }
-.bib-agua {
-  position: absolute;
-  width: 46%;
-  right: -6%;
-  bottom: -6%;
-  opacity: 0.05;
-  pointer-events: none;
-}
-
-/* Hojas que se pasan tocándolas (anterior a la izquierda, siguiente a
-   la derecha): con el mouse encima se levanta la esquina de abajo, como
-   invitando a dar vuelta la página. */
-.bib-pasable {
+.cat-perilla {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
   cursor: pointer;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.25s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.bib-pasable::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 0;
-  height: 0;
-  z-index: 2;
-  pointer-events: none;
-  transition: width 0.35s var(--suave-libro), height 0.35s var(--suave-libro);
+.cat-perilla:hover {
+  background: var(--azul);
+  transform: scale(1.06);
 }
-.bib-pasable.adelante::after {
-  right: 0;
-  border-radius: 6px 0 6px 0;
-  background: linear-gradient(315deg, #D8D0BE 0%, #EFE9DC 45%, rgba(0, 0, 0, 0.12) 50%, transparent 56%);
+.cat-perilla:active {
+  transform: scale(0.95);
 }
-.bib-pasable.atras::after {
-  left: 0;
-  border-radius: 0 6px 0 6px;
-  background: linear-gradient(45deg, #D8D0BE 0%, #EFE9DC 45%, rgba(0, 0, 0, 0.12) 50%, transparent 56%);
+.cat-perilla svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.4;
 }
-.bib-pasable:hover::after {
-  width: 2.4rem;
-  height: 2.4rem;
+.cat-perilla:focus-visible,
+.cat-pestana:focus-visible,
+.cat-enlace:focus-visible {
+  outline: 2px solid var(--celeste);
+  outline-offset: 2px;
 }
-@media (hover: none) {
-  .bib-pasable::after {
-    width: 1.4rem;
-    height: 1.4rem;
-  }
+.cat-pista {
+  margin-top: 0.7rem;
+  text-align: center;
+  font-size: 0.68rem;
+  color: #475569;
 }
-
-/* Cinta de marcador del color del área que cuelga bajo el libro */
-.bib-cinta {
-  position: absolute;
-  z-index: -1;
-  top: calc(100% - 4px);
-  right: 48px;
-  width: 12px;
-  height: 40px;
-  background: color-mix(in srgb, var(--c), #1C2430 22%);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
-  transition: background-color 0.6s;
+.dark .cat-pista {
+  color: #9FC6E8;
 }
 
-/* Hoja que se da vuelta al pasar de un área a otra */
-.bib-hoja,
-.bib-hoja-fija {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  z-index: 3;
-}
-.bib-hoja {
-  transform-style: preserve-3d;
-  animation: 1s var(--suave-libro) forwards;
-}
-.bib-hoja.adelante,
-.bib-hoja-fija.der {
-  left: 50%;
-}
-.bib-hoja.atras,
-.bib-hoja-fija.izq {
-  left: 0;
-}
-.bib-hoja.adelante {
-  transform-origin: left center;
-  animation-name: bibHojaAdelante;
-}
-.bib-hoja.atras {
-  transform-origin: right center;
-  animation-name: bibHojaAtras;
-}
-@keyframes bibHojaAdelante {
-  to { transform: rotateY(-180deg); }
-}
-@keyframes bibHojaAtras {
-  to { transform: rotateY(180deg); }
-}
-.bib-hoja-frente,
-.bib-hoja-dorso {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-.bib-hoja-dorso {
-  transform: rotateY(180deg);
-}
-/* La hoja se oscurece un poco a medio giro, como cuando se levanta */
-.bib-hoja-frente::after,
-.bib-hoja-dorso::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(90deg, rgba(40, 30, 10, 0.18), transparent 60%);
-  animation: bibSombraHoja 1s var(--suave-libro) both;
-}
-@keyframes bibSombraHoja {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
-}
-
-/* Debajo de lg el libro abre de una sola página (la derecha) y el
-   contenido nuevo sólo aparece de a poco; el librero se achica y los
-   libros de relleno se esconden para que quepan las áreas. */
-@media (max-width: 1023.98px) {
-  .bib-libro {
-    grid-template-columns: 1fr;
-  }
-  .bib-cara-der {
-    border-radius: 6px;
-  }
-  .bib-pagina-izq,
-  .bib-hoja,
-  .bib-hoja-fija,
-  .bib-cinta {
-    display: none;
-  }
-  .bib-aparece > * {
-    animation: bookContentIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-}
 @media (max-width: 639.98px) {
-  .bib-librero {
-    gap: 10px;
-    padding: 10px;
+  .cat-ficha {
+    padding: 1rem 1.1rem calc(var(--oculto) + 1.2rem);
   }
-  .bib-nicho {
-    height: 11.5rem;
-    padding: 0 4px;
+  .cat-pila,
+  .cat-pestanas {
+    margin: 0 3%;
   }
-  .bib-lomo {
-    --escala: 0.8;
-    --escala-alto: 0.86;
+  .cat-titulo {
+    font-size: 1.3rem;
   }
-  .bib-lomo-titulo {
-    font-size: 0.66rem;
-    letter-spacing: 0;
+  .cat-pestana {
+    padding: 0 0.35rem 2px;
+    font-size: 0.64rem;
+    gap: 0.25rem;
   }
-  .bib-nicho.lleno .bib-relleno {
-    display: none;
+  .cat-pestana svg {
+    width: 12px;
+    height: 12px;
   }
-  .bib-cara-der {
-    padding: 1.3rem 1.2rem 1.4rem;
+  .cat-pestana.actual {
+    font-size: 0.68rem;
   }
-}
-@media (max-width: 379.98px) {
-  .bib-librero {
-    margin-inline: 6px;
-    gap: 8px;
-    padding: 8px;
-  }
-  .bib-lomo {
-    --escala: 0.72;
-  }
-  .bib-lomo-titulo {
-    font-size: 0.62rem;
-  }
-  .bib-cara-der h3 {
-    font-size: 1.35rem;
+  .cat-marca {
+    width: 9.5rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bib-lomo,
-  .bib-pasable::after {
+  .ficha-area,
+  .cat-brillo,
+  .cat-pestana {
     transition: none;
   }
-  .bib-saltando .bib-lomo,
-  .bib-aparece > * {
+  .ficha-salta,
+  .cat-activa.entra,
+  .cat-marca,
+  .cat-contenido.revela *,
+  .cat-pestana {
     animation: none;
-  }
-  .bib-hoja,
-  .bib-hoja-fija {
-    display: none;
   }
 }
 

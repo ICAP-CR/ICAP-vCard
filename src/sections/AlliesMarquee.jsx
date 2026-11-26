@@ -379,21 +379,23 @@ export default function AlliesMarquee({ onNavigate }) {
           }}
           onDragStart={(e) => e.preventDefault()}
         >
+          {/* Todas las tarjetas miden lo mismo (ancho y alto fijos): el nombre
+              largo del organismo se corta en dos renglones. */}
           {[...alliesT, ...alliesT].map((item, idx) => (
             <button
               key={idx}
               type="button"
               onClick={(e) => handleSelect(item, e)}
-              className={`flex items-center gap-3.5 px-7 py-4.5 mr-5 rounded-2xl bg-white/10 border border-white/20 hover:border-white/50 hover:bg-white/20 transition-[background-color,border-color] min-w-[240px] sm:min-w-[290px] shrink-0 group text-left ${
+              className={`flex items-center gap-3.5 px-5 py-3 mr-5 rounded-2xl bg-white/10 border border-white/20 hover:border-white/50 hover:bg-white/20 transition-[background-color,border-color] w-[17rem] sm:w-[20rem] h-[6.5rem] shrink-0 group text-left ${
                 arrastrando ? 'cursor-grabbing' : 'cursor-pointer'
               }`}
             >
               <AllyIconBadge ally={item} size="w-11 h-11" textSize="text-sm" />
               <div className="flex flex-col min-w-0 flex-1">
-                <span className="font-heading font-bold text-base text-white group-hover:text-white transition-colors">
+                <span className="font-heading font-bold text-base text-white group-hover:text-white transition-colors truncate">
                   {item.name}
                 </span>
-                <span className="text-xs text-[#D6E9F7]/80 line-clamp-1 leading-snug">
+                <span className="text-xs text-[#D6E9F7]/80 line-clamp-2 leading-snug" title={item.label}>
                   {item.label}
                 </span>
                 {item.proyectos.length > 0 && (

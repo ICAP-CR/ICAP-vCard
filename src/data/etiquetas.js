@@ -24,7 +24,8 @@ import {
  * color e ícono para Proyectos, Áreas, Presencia y Socios.
  *
  * El orden es el de la matriz del PDF. `text` es el color de texto que se
- * lee bien encima de `color` (para las cápsulas activas).
+ * lee bien encima de `color` (para las cápsulas activas). `desc` es el texto
+ * de la página del libro en Áreas (el mismo de la página web, biblioteca).
  */
 export const ETIQUETAS = [
   { id: 'mipymes', color: '#F59E0B', text: '#2B1A00', icon: Store, es: 'MiPYMES', en: 'MSMEs',
@@ -42,12 +43,10 @@ export const ETIQUETAS = [
   { id: 'transformacion', color: '#16337A', text: '#FFFFFF', icon: Users, es: 'Transformación organizacional', en: 'Organizational transformation',
     desc: { es: 'Planes estratégicos, rediseño de procesos y formación que dejan capacidades instaladas en las instituciones.', en: 'Strategic plans, process redesign and training that leave lasting capacity in institutions.' } },
   { id: 'ambiente', color: '#2FA84F', text: '#FFFFFF', icon: Leaf, es: 'Ambiente y cambio climático', en: 'Environment and climate change',
-    lomo: { es: 'Ambiente y clima', en: 'Environment & climate' },
     desc: { es: 'Compras públicas sostenibles, gestión del riesgo y acción climática desde lo público.', en: 'Sustainable public procurement, risk management and climate action from the public sector.' } },
   { id: 'transporte', color: '#7C3AED', text: '#FFFFFF', icon: Bus, es: 'Transporte y movilidad', en: 'Transport and mobility',
     desc: { es: 'Modelos tarifarios, seguridad vial y planificación de la movilidad.', en: 'Fare models, road safety and mobility planning.' } },
   { id: 'alimentaria', color: '#A0612A', text: '#FFFFFF', icon: Wheat, es: 'Seguridad alimentaria y nutricional', en: 'Food and nutrition security',
-    lomo: { es: 'Seguridad alimentaria', en: 'Food security' },
     desc: { es: 'Desarrollo rural, nutrición y encadenamientos productivos para territorios más resilientes.', en: 'Rural development, nutrition and productive linkages for more resilient territories.' } },
   { id: 'salud', color: '#0EA5E9', text: '#FFFFFF', icon: Stethoscope, es: 'Salud', en: 'Health',
     desc: { es: 'Gestión de servicios de salud, planificación sanitaria y protección social.', en: 'Health services management, health planning and social protection.' } },
