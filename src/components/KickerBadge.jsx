@@ -21,7 +21,7 @@ export default function KickerBadge({ children, variant = 'dot', onDark = false 
     return (
       <div className="relative inline-flex">
         <div
-          className={`relative inline-flex items-center justify-center px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border text-[11px] sm:text-xs font-bold tracking-wide uppercase font-mono-code overflow-hidden ${
+          className={`relative inline-flex items-center justify-center px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border text-[0.6875rem] sm:text-xs font-bold tracking-wide uppercase font-mono-code overflow-hidden ${
             onDark
               ? 'bg-white/10 border-[#4FB2F2]/45 text-[#9FC6E8]'
               : 'bg-[#0077C8]/10 dark:bg-white/10 border-[#4FB2F2]/45 text-[#0077C8] dark:text-[#9FC6E8]'
@@ -52,7 +52,7 @@ export default function KickerBadge({ children, variant = 'dot', onDark = false 
   // DocenciaComunidad), donde el celeste del tema claro no contrasta.
   return (
     <div
-      className={`relative inline-flex items-center justify-center px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border text-[11px] sm:text-xs font-bold tracking-wide uppercase font-mono-code ${
+      className={`relative inline-flex items-center justify-center px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border text-[0.6875rem] sm:text-xs font-bold tracking-wide uppercase font-mono-code ${
         onDark
           ? 'bg-white/10 border-white/25 text-[#D6E9F7]'
           : 'bg-[#0077C8]/10 dark:bg-white/10 border-[#0077C8]/25 dark:border-white/15 text-[#0077C8] dark:text-[#9FC6E8]'

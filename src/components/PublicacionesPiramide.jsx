@@ -363,7 +363,7 @@ export default function PublicacionesPiramide({ titulo, palabras, objetivo, pist
               className="animate-holo-word flex flex-col items-center"
             >
               {!completo && (
-                <span className="font-mono-code text-[10px] sm:text-xs tracking-[0.3em]" style={{ color }}>
+                <span className="font-mono-code text-[0.625rem] sm:text-xs tracking-[0.3em]" style={{ color }}>
                   {String(activo + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}
                 </span>
               )}
@@ -438,7 +438,7 @@ export default function PublicacionesPiramide({ titulo, palabras, objetivo, pist
             <span className="w-5 h-8 rounded-full border-2 border-[#9FC6E8]/60 flex justify-center pt-1.5">
               <span className="w-1 h-1.5 rounded-full bg-[#9FC6E8] animate-scroll-wheel" />
             </span>
-            <span className="text-[10px] sm:text-[11px] font-mono-code uppercase tracking-widest text-[#9FC6E8]">{pista}</span>
+            <span className="text-[0.625rem] sm:text-[0.6875rem] font-mono-code uppercase tracking-widest text-[#9FC6E8]">{pista}</span>
           </div>
         </div>
       </div>

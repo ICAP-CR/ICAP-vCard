@@ -4,6 +4,7 @@ import { LinkedinIcon } from '../components/Icons';
 import { useLanguage } from '../i18n/LanguageContext';
 import KickerBadge from '../components/KickerBadge';
 import EscudoICAP from '../components/EscudoICAP';
+import fotoDirector from '../assets/autoridades/edgar-balsells.jpeg';
 
 /**
  * Autoridades del ICAP: una sola ficha de vitrina para la Dirección
@@ -20,7 +21,7 @@ import EscudoICAP from '../components/EscudoICAP';
 const DIRECTOR = {
   name: 'Edgar Balsells',
   initials: 'EB',
-  photo: null,
+  photo: fotoDirector,
   linkedin: 'https://www.linkedin.com/in/edgar-balsells-8a448b27',
   quote: { es: '', en: '' }
 };
@@ -45,7 +46,16 @@ function Portrait({ person }) {
       <div aria-hidden="true" className="absolute -inset-[6px] rounded-full authority-ring" />
       <div className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center ring-4 ring-white/15 bg-[radial-gradient(circle_at_32%_26%,#4FB2F2_0%,#0077C8_52%,#003366_100%)] shadow-2xl shadow-black/40">
         {person.photo ? (
-          <img src={person.photo} alt={person.name} className="w-full h-full object-cover" draggable={false} />
+          <img
+            src={person.photo}
+            alt={person.name}
+            className="w-full h-full object-cover"
+            // La foto original no viene centrada (la cara cae un poco a la
+            // derecha y el saco ocupa mucho abajo): se acerca un poco y se corre
+            // a la izquierda para que la cara quede al centro del círculo.
+            style={{ objectPosition: '50% 0%', transform: 'scale(1.12) translateX(-3%)', transformOrigin: '50% 8%' }}
+            draggable={false}
+          />
         ) : (
           <span className="font-heading font-extrabold text-white tracking-wide drop-shadow text-5xl sm:text-6xl">
             {person.initials}
@@ -84,10 +94,10 @@ function ContactRow({ person }) {
         <LinkedinIcon className="w-5 h-5" />
       </span>
       <span className="flex-1 min-w-0 text-left">
-        <span className="block font-heading font-extrabold text-sm sm:text-[15px] tracking-wide leading-tight truncate">
+        <span className="block font-heading font-extrabold text-sm sm:text-[0.9375rem] tracking-wide leading-tight truncate">
           {a.linkedinCta}
         </span>
-        <span className="block text-[10px] sm:text-[11px] font-mono-code text-white/75 leading-tight truncate">
+        <span className="block text-[0.625rem] sm:text-[0.6875rem] font-mono-code text-white/75 leading-tight truncate">
           linkedin.com/in/edgar-balsells
         </span>
       </span>
@@ -101,7 +111,7 @@ function FlipButton({ onClick, icon: Icon, label }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-heading font-bold uppercase tracking-wider transition-colors group cursor-pointer text-[#9FC6E8] hover:text-white"
+      className="inline-flex items-center gap-2 text-[0.6875rem] sm:text-xs font-heading font-bold uppercase tracking-wider transition-colors group cursor-pointer text-[#9FC6E8] hover:text-white"
     >
       <Icon className="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500" />
       {label}
@@ -183,7 +193,7 @@ function DirectorFront({ person, role, tag, onFlip }) {
         <Portrait person={person} />
 
         <div className="flex-1 min-w-0 flex flex-col items-center sm:items-start text-center sm:text-left gap-4">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 border border-[#4FB2F2]/40 text-[10px] sm:text-[11px] font-mono-code font-bold uppercase tracking-[0.18em] text-[#bfe6ff] shadow-[0_0_18px_-4px_rgba(79,178,242,0.6)]">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 border border-[#4FB2F2]/40 text-[0.625rem] sm:text-[0.6875rem] font-mono-code font-bold uppercase tracking-[0.18em] text-[#bfe6ff] shadow-[0_0_18px_-4px_rgba(79,178,242,0.6)]">
             <Crown className="w-3 h-3" />
             {tag}
           </span>
@@ -199,7 +209,7 @@ function DirectorFront({ person, role, tag, onFlip }) {
           <span aria-hidden="true" className="h-[3px] w-24 sm:w-32 rounded-full bg-gradient-to-r from-[#4FB2F2] via-[#bfe6ff] to-transparent" />
 
           {/* Sello institucional */}
-          <div className="flex flex-col gap-1.5 text-[11px] sm:text-xs text-[#C9D9E8]">
+          <div className="flex flex-col gap-1.5 text-[0.6875rem] sm:text-xs text-[#C9D9E8]">
             <span className="inline-flex items-center justify-center sm:justify-start gap-2">
               <Landmark className="w-3.5 h-3.5 text-[#7dd3fc] shrink-0" />
               {a.institution}

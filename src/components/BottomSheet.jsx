@@ -44,7 +44,7 @@ export default function BottomSheet({ isOpen, onClose, title, subtitle, icon, ch
             )}
             <div>
               {subtitle && (
-                <span className="text-[10px] sm:text-xs font-mono-code font-bold uppercase tracking-wider text-[#0077C8] block">
+                <span className="text-[0.625rem] sm:text-xs font-mono-code font-bold uppercase tracking-wider text-[#0077C8] block">
                   {subtitle}
                 </span>
               )}

@@ -478,7 +478,7 @@ export default function FormacionVisionHero({ title, text, closing }) {
             centrado. */}
         <div ref={textRef} className="relative z-10 w-full max-w-lg md:max-w-xl lg:max-w-3xl mx-auto">
           <p
-            className="font-heading text-[#003366] dark:text-[#9FC6E8] text-[17px] md:text-xl lg:text-[1.375rem] leading-relaxed text-justify [text-align-last:center] hyphens-auto will-change-transform"
+            className="font-heading text-[#003366] dark:text-[#9FC6E8] text-[1.0625rem] md:text-xl lg:text-[1.375rem] leading-relaxed text-justify [text-align-last:center] hyphens-auto will-change-transform"
             style={textStyle}
           >
             {text}

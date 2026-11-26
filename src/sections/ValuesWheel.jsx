@@ -425,7 +425,7 @@ export default function ValuesWheel({ items = DEFAULT_VALUES, content }) {
                   <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <span
-                  className="text-[10px] sm:text-xs font-semibold leading-tight text-[#003366] dark:text-[#EAF3FB] whitespace-nowrap"
+                  className="text-[0.625rem] sm:text-xs font-semibold leading-tight text-[#003366] dark:text-[#EAF3FB] whitespace-nowrap"
                   style={{ opacity: isFlyingToCenter ? 0 : 1, transition: `opacity ${formTransition}` }}
                 >
                   {wheelT.items[v.id].name}
@@ -447,7 +447,7 @@ export default function ValuesWheel({ items = DEFAULT_VALUES, content }) {
               {React.createElement(current.icon, { className: 'w-4 h-4' })}
             </div>
             <div>
-              <span className="text-[9px] sm:text-[10px] font-mono-code text-white/80 dark:text-[#9FC6E8] uppercase tracking-wider block">
+              <span className="text-[0.5625rem] sm:text-[0.625rem] font-mono-code text-white/80 dark:text-[#9FC6E8] uppercase tracking-wider block">
                 {wheelT.pilarLabel}
               </span>
               <h3 className="font-heading font-bold text-base sm:text-lg text-white">
@@ -462,7 +462,7 @@ export default function ValuesWheel({ items = DEFAULT_VALUES, content }) {
         </div>
         </div>
 
-        <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-[#6E8AA8] mt-4 max-w-xs">
+        <p className="text-[0.625rem] sm:text-[0.6875rem] text-slate-500 dark:text-[#6E8AA8] mt-4 max-w-xs">
           {wheelT.footerHint}
         </p>
       </div>

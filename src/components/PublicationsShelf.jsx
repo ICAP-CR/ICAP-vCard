@@ -87,7 +87,7 @@ export default function PublicationsShelf({ items }) {
           const medido = anchoPortada !== null && anchoLomo !== null;
           const contenido = (animado) => (
           <div className={`relative h-full flex flex-col px-4 sm:px-7 py-5 sm:py-7 ${animado ? 'animate-book-content' : ''}`}>
-            <div className="flex items-center justify-between pb-2.5 border-b border-[#003366]/15 dark:border-white/15 font-mono-code text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-[#0077C8] dark:text-[#9FC6E8]">
+            <div className="flex items-center justify-between pb-2.5 border-b border-[#003366]/15 dark:border-white/15 font-mono-code text-[0.625rem] sm:text-[0.6875rem] font-bold uppercase tracking-widest text-[#0077C8] dark:text-[#9FC6E8]">
               <span>ICAP</span>
               <span>Nº {String(i + 1).padStart(2, '0')}</span>
             </div>
@@ -136,11 +136,11 @@ export default function PublicationsShelf({ items }) {
 
                 <Icon className="absolute top-2.5 sm:top-3 left-1/2 -translate-x-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/90" strokeWidth={1.8} />
                 <span className="absolute inset-x-0 top-12 sm:top-14 bottom-12 sm:bottom-14 flex items-center justify-center overflow-hidden">
-                  <span className="[writing-mode:vertical-rl] rotate-180 font-heading font-bold text-[11px] sm:text-[13px] tracking-wide leading-tight max-h-full text-center">
+                  <span className="[writing-mode:vertical-rl] rotate-180 font-heading font-bold text-[0.6875rem] sm:text-[0.8125rem] tracking-wide leading-tight max-h-full text-center">
                     {item.name}
                   </span>
                 </span>
-                <span className="absolute bottom-3 sm:bottom-3.5 left-1/2 -translate-x-1/2 font-mono-code text-[8px] sm:text-[9px] font-bold tracking-widest text-white/80">
+                <span className="absolute bottom-3 sm:bottom-3.5 left-1/2 -translate-x-1/2 font-mono-code text-[0.5rem] sm:text-[0.5625rem] font-bold tracking-widest text-white/80">
                   ICAP
                 </span>
               </button>

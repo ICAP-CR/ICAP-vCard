@@ -113,7 +113,7 @@ function ImpactCardBack({ Icon, name, description }) {
         {name}
       </h3>
       <p className="relative text-xs sm:text-sm text-white/90 dark:text-slate-300 leading-snug">{description}</p>
-      <span className="relative font-mono-code text-[9px] sm:text-[10px] text-white/55 dark:text-white/30 mt-0.5">
+      <span className="relative font-mono-code text-[0.5625rem] sm:text-[0.625rem] text-white/55 dark:text-white/30 mt-0.5">
         toca para cerrar
       </span>
     </div>
@@ -322,11 +322,11 @@ function ImpactList({ items, c, visible }) {
               <Icon className="w-6 h-6" strokeWidth={1.8} />
             </span>
             <div className="relative min-w-0">
-              <span className="block font-mono-code text-[10px] font-bold text-[#0077C8]/70 dark:text-[#4FB2F2]/70">
+              <span className="block font-mono-code text-[0.625rem] font-bold text-[#0077C8]/70 dark:text-[#4FB2F2]/70">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="font-heading font-bold text-base text-[#003366] dark:text-[#9FC6E8] leading-tight">{itemT.name}</h3>
-              <p className="text-[13px] text-slate-700 dark:text-slate-300 leading-snug mt-1">{itemT.description}</p>
+              <p className="text-[0.8125rem] text-slate-700 dark:text-slate-300 leading-snug mt-1">{itemT.description}</p>
             </div>
           </li>
         );

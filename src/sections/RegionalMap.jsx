@@ -243,7 +243,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
 
       {/* Institutional Focus */}
       <div className={`p-4 rounded-2xl border space-y-1.5 ${cardBg}`}>
-        <span className={`text-[10px] font-mono-code uppercase font-bold tracking-wider block ${labelText}`}>
+        <span className={`text-[0.625rem] font-mono-code uppercase font-bold tracking-wider block ${labelText}`}>
           {t.regionalMap.institutionalFocusLabel}
         </span>
         <div className={`flex items-center gap-2 text-xs font-semibold ${headingText}`}>
@@ -273,10 +273,10 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
           <>
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className={`text-[10px] font-mono-code uppercase font-bold tracking-wider ${labelText}`}>
+                <span className={`text-[0.625rem] font-mono-code uppercase font-bold tracking-wider ${labelText}`}>
                   {t.regionalMap.projectsLabel}
                 </span>
-                <span className={`text-[8px] font-mono-code font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${isDark ? 'bg-white/10 text-[#9FC6E8]' : 'bg-[#EAF3FB] text-[#003366] dark:bg-white/10 dark:text-[#9FC6E8]'}`}>
+                <span className={`text-[0.5rem] font-mono-code font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${isDark ? 'bg-white/10 text-[#9FC6E8]' : 'bg-[#EAF3FB] text-[#003366] dark:bg-white/10 dark:text-[#9FC6E8]'}`}>
                   {t.regionalMap.projectsSource}
                 </span>
               </div>
@@ -292,11 +292,11 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
                         <div className={`font-heading font-extrabold text-2xl leading-none ${isDark ? 'text-[#4FB2F2]' : 'text-[#003366] dark:text-[#4FB2F2]'}`}>
                           {valor}
                         </div>
-                        <div className={`text-[10px] mt-1 ${mutedText}`}>{etq}</div>
+                        <div className={`text-[0.625rem] mt-1 ${mutedText}`}>{etq}</div>
                       </div>
                     ))}
                   </div>
-                  {regionales > 0 && <p className={`text-[10px] leading-snug mt-1.5 ${mutedText}`}>{t.regionalMap.regionalNote}</p>}
+                  {regionales > 0 && <p className={`text-[0.625rem] leading-snug mt-1.5 ${mutedText}`}>{t.regionalMap.regionalNote}</p>}
                 </>
               ) : (
                 <p className={`text-xs italic ${mutedText}`}>{t.regionalMap.noProjects}</p>
@@ -305,7 +305,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
 
             {etiquetas.length > 0 && (
               <div>
-                <span className={`text-[10px] font-mono-code uppercase font-bold tracking-wider block mb-2 ${labelText}`}>
+                <span className={`text-[0.625rem] font-mono-code uppercase font-bold tracking-wider block mb-2 ${labelText}`}>
                   {t.regionalMap.projectAreasLabel}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -315,7 +315,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
                     return (
                       <span
                         key={id}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold shadow-sm"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[0.6875rem] font-semibold shadow-sm"
                         style={{ backgroundColor: e.color, color: e.text }}
                       >
                         <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -330,7 +330,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
 
             {proyectos.length > 0 && (
               <div>
-                <span className={`text-[10px] font-mono-code uppercase font-bold tracking-wider block mb-2 ${labelText}`}>
+                <span className={`text-[0.625rem] font-mono-code uppercase font-bold tracking-wider block mb-2 ${labelText}`}>
                   {t.regionalMap.recentLabel}
                 </span>
                 <div className="space-y-1.5">
@@ -356,7 +356,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
 
             {clientes.length > 0 && (
               <div>
-                <span className={`text-[10px] font-mono-code uppercase font-bold tracking-wider block mb-2 ${labelText}`}>
+                <span className={`text-[0.625rem] font-mono-code uppercase font-bold tracking-wider block mb-2 ${labelText}`}>
                   {t.regionalMap.orgsLabel}
                 </span>
                 <div className="space-y-1.5">
@@ -371,7 +371,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
                   ))}
                 </div>
                 {clientes.length > MAX_CLIENTES && (
-                  <p className={`text-[11px] mt-1.5 ${mutedText}`}>{t.regionalMap.moreOrgs(clientes.length - MAX_CLIENTES)}</p>
+                  <p className={`text-[0.6875rem] mt-1.5 ${mutedText}`}>{t.regionalMap.moreOrgs(clientes.length - MAX_CLIENTES)}</p>
                 )}
               </div>
             )}
@@ -396,7 +396,7 @@ function CountryDetailBody({ country, tone = 'dark', onNavigate }) {
           <Mail className="w-4 h-4" />
         </div>
         <div className="min-w-0">
-          <span className={`text-[9px] font-mono-code uppercase font-bold tracking-wider block ${labelText}`}>
+          <span className={`text-[0.5625rem] font-mono-code uppercase font-bold tracking-wider block ${labelText}`}>
             {t.regionalMap.officeContactLabel}
           </span>
           <span className={`text-xs font-semibold truncate block ${isDark ? 'text-white' : 'text-[#003366]'}`}>
@@ -531,7 +531,7 @@ export default function RegionalMap({ onNavigate }) {
           >
             {/* Rótulos del mar: "Mar Caribe" arriba a la derecha y "Océano Pacífico"
                 abajo a la izquierda, por encima del mapa (z-20). */}
-            <span className="absolute left-6 bottom-14 sm:bottom-20 text-[10px] sm:text-xs text-[#9FC6E8]/40 font-mono-code uppercase tracking-widest select-none pointer-events-none z-20">
+            <span className="absolute left-6 bottom-14 sm:bottom-20 text-[0.625rem] sm:text-xs text-[#9FC6E8]/40 font-mono-code uppercase tracking-widest select-none pointer-events-none z-20">
               {t.regionalMap.pacificOcean}
             </span>
 
@@ -539,7 +539,7 @@ export default function RegionalMap({ onNavigate }) {
               <h3 className="font-heading font-extrabold text-lg sm:text-xl text-white/90 tracking-wide">
                 {t.regionalMap.mapTitle}
               </h3>
-              <span className="text-[10px] sm:text-xs text-[#9FC6E8]/40 font-mono-code uppercase tracking-widest block mt-3">
+              <span className="text-[0.625rem] sm:text-xs text-[#9FC6E8]/40 font-mono-code uppercase tracking-widest block mt-3">
                 {t.regionalMap.caribbeanSea}
               </span>
             </div>
@@ -736,12 +736,12 @@ export default function RegionalMap({ onNavigate }) {
             </div>
 
             {/* Instruction Footer */}
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[11px] text-[#9FC6E8] z-10">
+            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[0.6875rem] text-[#9FC6E8] z-10">
               <span className="flex items-center gap-1.5 font-medium">
                 <Navigation className="w-3.5 h-3.5 text-[#0077C8]" />
                 {t.regionalMap.mapHint}
               </span>
-              <span className="font-mono-code text-[10px] text-[#9FC6E8]/70 hidden sm:inline">
+              <span className="font-mono-code text-[0.625rem] text-[#9FC6E8]/70 hidden sm:inline">
                 {t.regionalMap.mapFooterTag}
               </span>
             </div>
@@ -785,7 +785,7 @@ export default function RegionalMap({ onNavigate }) {
             <span className="text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-300 font-mono-code">
               {t.regionalMap.countryListLabel}
             </span>
-            <span className="text-[11px] text-slate-600 dark:text-[#9FC6E8] hidden sm:block">
+            <span className="text-[0.6875rem] text-slate-600 dark:text-[#9FC6E8] hidden sm:block">
               {t.regionalMap.countryListHint}
             </span>
           </div>
@@ -809,7 +809,7 @@ export default function RegionalMap({ onNavigate }) {
                       {c.name}
                     </span>
                     <span
-                      className={`text-[9px] font-mono-code block truncate ${
+                      className={`text-[0.5625rem] font-mono-code block truncate ${
                         isSelected ? 'text-white/90' : 'text-slate-400 group-hover:text-slate-200'
                       }`}
                     >

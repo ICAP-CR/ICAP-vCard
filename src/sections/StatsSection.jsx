@@ -123,7 +123,7 @@ function StatCard({ icon: Icon, value, label, sublabel, color, hex, visible, sta
         {display}
       </div>
       <div className="font-heading font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 leading-tight">{label}</div>
-      <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-300 mt-0.5">{sublabel}</div>
+      <div className="text-[0.625rem] sm:text-xs text-slate-500 dark:text-slate-300 mt-0.5">{sublabel}</div>
 
       {/* Mini gráfico de barras: crece apenas arranca la animación, como
           adelanto visual antes de que el número empiece a subir. */}
@@ -232,7 +232,7 @@ export default function StatsSection() {
         <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#003366] dark:text-[#9FC6E8] tracking-tight mb-2">
           {t.stats.title}
         </h2>
-        <div className="inline-block px-2.5 py-0.5 rounded-md bg-[#EAF3FB] dark:bg-white/10 text-[#003366] dark:text-[#9FC6E8] text-[9px] sm:text-[10px] font-mono-code font-bold tracking-wider uppercase mb-8">
+        <div className="inline-block px-2.5 py-0.5 rounded-md bg-[#EAF3FB] dark:bg-white/10 text-[#003366] dark:text-[#9FC6E8] text-[0.5625rem] sm:text-[0.625rem] font-mono-code font-bold tracking-wider uppercase mb-8">
           {t.stats.badge}
         </div>
 

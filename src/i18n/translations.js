@@ -52,7 +52,7 @@ export const translations = {
     proyectosAT: {
       kicker: 'Portafolio',
       title: 'Proyectos de Asistencia Técnica',
-      subtitle: 'Algunos de los proyectos que el ICAP ha desarrollado en la última década junto a instituciones nacionales, organismos del SICA y la cooperación internacional.',
+      subtitle: 'Proyectos del ICAP que cuentan con respaldo documental (contratos, productos entregados o informes de cierre), junto a instituciones nacionales, organismos del SICA y la cooperación internacional.',
       statProjects: 'Proyectos',
       statClients: 'Clientes',
       statActive: 'En curso',
@@ -64,6 +64,8 @@ export const translations = {
       countriesLabel: 'Países',
       allCountries: 'Todos',
       countriesHint: 'Podés escoger varios',
+      centralAmerica: 'Centroamérica',
+      centralAmericaHint: 'Alcance regional, sin un país específico',
       close: 'Cerrar',
       openBelow: 'Abierto abajo',
       clientTypes: {
@@ -85,7 +87,7 @@ export const translations = {
       client: 'Organización / Cliente',
       clientType: 'Tipo de cliente',
       period: 'Período',
-      region: 'Región'
+      region: 'Zona atendida'
     },
 
     sectionsStrip: {
@@ -119,13 +121,17 @@ export const translations = {
       kicker: 'Expertise y Oferta',
       title: 'Áreas de Especialización',
       subtitle: 'Las catorce áreas temáticas en que se clasifican los proyectos de Asistencia Técnica del ICAP. Cada proyecto puede tocar varias.',
-      projects: 'Proyectos',
-      clients: 'Clientes',
-      ongoing: 'En curso',
       projectsSuffix: (n) => (n === 1 ? '1 proyecto' : `${n} proyectos`),
       latest: 'Proyectos recientes',
-      combines: 'Suele combinarse con',
-      seeRelated: 'Ver proyectos relacionados'
+      seeRelated: 'Ver proyectos relacionados',
+      bookKicker: 'Área de especialización',
+      bookHeader: 'Asistencia técnica · ICAP',
+      institute: ['Instituto Centroamericano', 'de Administración Pública'],
+      plaqueTitle: 'Asistencia técnica',
+      plaqueCount: (n) => `${n} áreas`,
+      plaqueAria: 'Resaltar los libros de las áreas',
+      pagePrev: 'Área anterior',
+      pageNext: 'Área siguiente'
     },
 
     authorities: {
@@ -134,7 +140,7 @@ export const translations = {
       subtitle:
         'Quien conduce el ICAP desde la Dirección General. Volteá la ficha para leer su mensaje.',
       roles: {
-        director: 'Director del ICAP'
+        director: 'Director Ejecutivo'
       },
       tags: {
         director: 'Dirección General'
@@ -270,12 +276,12 @@ export const translations = {
       sidebarFooterLabel: 'Presencia y Cooperación ICAP',
       institutionalFocusLabel: 'Enfoque Institucional',
       projectsLabel: 'Proyectos de Asistencia Técnica',
-      projectsSource: 'Clasificación 2026',
+      projectsSource: 'Con evidencia',
       totalLabel: 'Total',
       nationalLabel: 'Nacionales',
       regionalLabel: 'Regionales',
-      regionalNote: 'Los regionales abarcan varios países a la vez (Centroamérica, el Caribe u otros).',
-      noProjects: 'Sin proyectos registrados en la clasificación de Asistencia Técnica.',
+      regionalNote: 'Los regionales nombran a este país junto con otros. Los de Centroamérica en general no se cuentan por país: están en el filtro «Centroamérica» de Proyectos.',
+      noProjects: 'Sin proyectos con evidencia que nombren a este país.',
       projectAreasLabel: 'Áreas de especialización',
       orgsLabel: 'Clientes y contrapartes',
       moreOrgs: (n) => `y ${n} más`,
@@ -709,7 +715,7 @@ export const translations = {
     proyectosAT: {
       kicker: 'Portfolio',
       title: 'Technical Assistance Projects',
-      subtitle: 'A selection of the projects ICAP has carried out over the last decade with national institutions, SICA bodies and international cooperation agencies.',
+      subtitle: 'ICAP projects backed by documentary evidence (contracts, delivered products or closing reports), carried out with national institutions, SICA bodies and international cooperation agencies.',
       statProjects: 'Projects',
       statClients: 'Clients',
       statActive: 'Ongoing',
@@ -721,6 +727,8 @@ export const translations = {
       countriesLabel: 'Countries',
       allCountries: 'All',
       countriesHint: 'You can pick several',
+      centralAmerica: 'Central America',
+      centralAmericaHint: 'Regional scope, no specific country',
       close: 'Close',
       openBelow: 'Open below',
       clientTypes: {
@@ -742,7 +750,7 @@ export const translations = {
       client: 'Organization / Client',
       clientType: 'Client type',
       period: 'Period',
-      region: 'Region'
+      region: 'Area served'
     },
 
     sectionsStrip: {
@@ -775,13 +783,17 @@ export const translations = {
       kicker: 'Expertise & Offerings',
       title: 'Areas of Specialization',
       subtitle: "The fourteen thematic areas used to classify ICAP's Technical Assistance projects. A project can span several.",
-      projects: 'Projects',
-      clients: 'Clients',
-      ongoing: 'Ongoing',
       projectsSuffix: (n) => (n === 1 ? '1 project' : `${n} projects`),
       latest: 'Recent projects',
-      combines: 'Often combined with',
-      seeRelated: 'See related projects'
+      seeRelated: 'See related projects',
+      bookKicker: 'Area of specialization',
+      bookHeader: 'Technical assistance · ICAP',
+      institute: ['Central American Institute', 'of Public Administration'],
+      plaqueTitle: 'Technical assistance',
+      plaqueCount: (n) => `${n} areas`,
+      plaqueAria: 'Highlight the area books',
+      pagePrev: 'Previous area',
+      pageNext: 'Next area'
     },
 
     authorities: {
@@ -790,7 +802,7 @@ export const translations = {
       subtitle:
         'The person who leads ICAP from the Executive Office. Flip the card to read their message.',
       roles: {
-        director: 'Director of ICAP'
+        director: 'Executive Director'
       },
       tags: {
         director: 'Executive Office'
@@ -924,12 +936,12 @@ export const translations = {
       sidebarFooterLabel: 'ICAP Presence & Cooperation',
       institutionalFocusLabel: 'Institutional Focus',
       projectsLabel: 'Technical Assistance projects',
-      projectsSource: '2026 classification',
+      projectsSource: 'With evidence',
       totalLabel: 'Total',
       nationalLabel: 'National',
       regionalLabel: 'Regional',
-      regionalNote: 'Regional projects span several countries at once (Central America, the Caribbean or others).',
-      noProjects: 'No projects on record in the Technical Assistance classification.',
+      regionalNote: 'Regional projects name this country along with others. Projects for Central America as a whole are not counted by country: see the “Central America” filter in Projects.',
+      noProjects: 'No evidence-backed projects name this country.',
       projectAreasLabel: 'Areas of specialization',
       orgsLabel: 'Clients & counterparts',
       moreOrgs: (n) => `and ${n} more`,

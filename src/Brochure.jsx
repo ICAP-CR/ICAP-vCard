@@ -55,7 +55,9 @@ const FIT_PAGES = new Set([
   'docenciaInvestigacion'
 ]);
 const FIT_MIN_WIDTH = 768;
-const FIT_MIN_ZOOM = 0.7;
+// Piso del achicado: por debajo de esto la letra se ve demasiado chica y es
+// preferible el tamaño normal con scroll.
+const FIT_MIN_ZOOM = 0.85;
 
 const startsInDocencia = () => /\/docencia\/?$/.test(window.location.pathname);
 
@@ -236,6 +238,33 @@ export default function Brochure({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // --- Menú sólo con íconos ----------------------------------------------
+  // Si algún nombre no cabe en el ancho de su botón (pantallas angostas o
+  // nombres largos en inglés), se esconden todos los nombres y quedan sólo
+  // los íconos. Los nombres siguen en el DOM (sr-only) para lectores de
+  // pantalla, y scrollWidth da su ancho natural igual, así se puede volver
+  // a medir al agrandar la pantalla.
+  const labelRefs = useRef({});
+  const [soloIconos, setSoloIconos] = useState(false);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return undefined;
+    const medir = () => {
+      const noCabe = activePages.some(({ id }) => {
+        const btn = itemRefs.current[id];
+        const label = labelRefs.current[id];
+        return btn && label && label.scrollWidth + 6 > btn.clientWidth;
+      });
+      setSoloIconos(noCabe);
+    };
+    medir();
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(medir);
+    ro.observe(nav);
+    return () => ro.disconnect();
+  }, [activePages, lang]);
+
   const renderPage = () => {
     switch (activePage) {
       case 'inicio':
@@ -288,12 +317,12 @@ export default function Brochure({
 
   return (
     <div
-      className={`w-full h-screen bg-[#D6E9F7] dark:bg-[#001F3D] text-slate-900 dark:text-white font-sans relative flex flex-col overflow-hidden ${
+      className={`w-full h-dvh bg-[#D6E9F7] dark:bg-[#001F3D] text-slate-900 dark:text-white font-sans relative flex flex-col overflow-hidden ${
         theme === 'dark' ? 'dark' : ''
       }`}
     >
       {/* Sticky Utility Navbar */}
-      <header className="shrink-0 z-40 bg-gradient-to-br from-[#003366]/95 via-[#0B5A96]/95 to-[#0077C8]/95 dark:bg-none dark:bg-[#003366]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-6 py-3 flex items-center gap-2 shadow-sm">
+      <header className="shrink-0 z-40 bg-gradient-to-br from-[#003366]/95 via-[#0B5A96]/95 to-[#0077C8]/95 dark:bg-none dark:bg-[#003366]/95 backdrop-blur-md border-b border-white/10 px-3 min-[380px]:px-4 sm:px-6 py-3 flex items-center gap-2 shadow-sm">
         <button
           onClick={() => goToPage('inicio')}
           className="flex items-center gap-2 cursor-pointer group shrink-0"
@@ -307,10 +336,12 @@ export default function Brochure({
               draggable={false}
             />
           </div>
-          <span className="font-heading font-extrabold text-white text-sm sm:text-base tracking-wider">
+          {/* En celulares muy angostos (< 380px) la palabra se esconde y queda
+              el isotipo, para que el engranaje no se salga por la derecha. */}
+          <span className="font-heading font-extrabold text-white text-sm sm:text-base tracking-wider max-[379px]:hidden">
             ICAP
           </span>
-          <span className="hidden sm:inline-block text-[11px] font-mono-code text-[#9FC6E8] border-l border-white/20 pl-2 ml-1">
+          <span className="hidden sm:inline-block text-[0.6875rem] font-mono-code text-[#9FC6E8] border-l border-white/20 pl-2 ml-1">
             {t.header.subtitle}
           </span>
         </button>
@@ -344,16 +375,16 @@ export default function Brochure({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="ml-auto flex items-center gap-1.5 min-[380px]:gap-2 sm:gap-3 shrink-0">
           <button
             onClick={() => setAboutModalOpen(true)}
-            className="text-xs font-heading font-semibold text-[#EAF3FB] hover:text-white px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+            className="text-xs font-heading font-semibold text-[#EAF3FB] hover:text-white whitespace-nowrap px-2 min-[380px]:px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
           >
             {t.header.about}
           </button>
           <button
             onClick={() => goToPage('contacto')}
-            className="h-8 px-3.5 sm:px-4 rounded-xl bg-black/30 hover:bg-white/10 border border-white/10 text-white font-heading font-bold text-xs tracking-wider uppercase shadow transition-all active:scale-95 shrink-0"
+            className="h-8 whitespace-nowrap px-3 min-[380px]:px-3.5 sm:px-4 rounded-xl bg-black/30 hover:bg-white/10 border border-white/10 text-white font-heading font-bold text-xs tracking-wider uppercase shadow transition-all active:scale-95 shrink-0"
           >
             {t.header.contact}
           </button>
@@ -377,14 +408,14 @@ export default function Brochure({
               <div className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-60 rounded-xl bg-[#00203E] border border-white/10 shadow-2xl p-3 animate-fade-in">
                 {/* Vista */}
                 <div className="mb-3">
-                  <span className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-[#9FC6E8]/70 mb-1.5">
+                  <span className="block text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-[#9FC6E8]/70 mb-1.5">
                     {t.header.settingsView}
                   </span>
                   <div className="flex items-center bg-black/30 p-0.5 rounded-lg border border-white/10">
                     <button
                       onClick={() => onSetViewMode('full')}
                       aria-pressed={viewMode === 'full'}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-heading font-semibold transition-all ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[0.6875rem] font-heading font-semibold transition-all ${
                         viewMode === 'full'
                           ? 'bg-[#0077C8] text-white shadow'
                           : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -396,7 +427,7 @@ export default function Brochure({
                     <button
                       onClick={() => onSetViewMode('mobile')}
                       aria-pressed={viewMode === 'mobile'}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-heading font-semibold transition-all ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[0.6875rem] font-heading font-semibold transition-all ${
                         viewMode === 'mobile'
                           ? 'bg-[#0077C8] text-white shadow'
                           : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -410,14 +441,14 @@ export default function Brochure({
 
                 {/* Idioma */}
                 <div className="mb-3">
-                  <span className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-[#9FC6E8]/70 mb-1.5">
+                  <span className="block text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-[#9FC6E8]/70 mb-1.5">
                     {t.header.settingsLanguage}
                   </span>
                   <div className="flex items-center bg-black/30 p-0.5 rounded-lg border border-white/10">
                     <button
                       onClick={() => setLang('es')}
                       aria-pressed={lang === 'es'}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-heading font-semibold transition-all ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[0.6875rem] font-heading font-semibold transition-all ${
                         lang === 'es'
                           ? 'bg-[#0077C8] text-white shadow'
                           : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -429,7 +460,7 @@ export default function Brochure({
                     <button
                       onClick={() => setLang('en')}
                       aria-pressed={lang === 'en'}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-heading font-semibold transition-all ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[0.6875rem] font-heading font-semibold transition-all ${
                         lang === 'en'
                           ? 'bg-[#0077C8] text-white shadow'
                           : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -443,14 +474,14 @@ export default function Brochure({
 
                 {/* Tema */}
                 <div>
-                  <span className="block text-[10px] font-mono-code font-bold uppercase tracking-wider text-[#9FC6E8]/70 mb-1.5">
+                  <span className="block text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-[#9FC6E8]/70 mb-1.5">
                     {t.header.settingsTheme}
                   </span>
                   <div className="flex items-center bg-black/30 p-0.5 rounded-lg border border-white/10">
                     <button
                       onClick={() => setTheme('light')}
                       aria-pressed={theme === 'light'}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-heading font-semibold transition-all ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[0.6875rem] font-heading font-semibold transition-all ${
                         theme === 'light'
                           ? 'bg-[#0077C8] text-white shadow'
                           : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -462,7 +493,7 @@ export default function Brochure({
                     <button
                       onClick={() => setTheme('dark')}
                       aria-pressed={theme === 'dark'}
-                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[11px] font-heading font-semibold transition-all ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-[0.6875rem] font-heading font-semibold transition-all ${
                         theme === 'dark'
                           ? 'bg-[#0077C8] text-white shadow'
                           : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -486,7 +517,7 @@ export default function Brochure({
           <button
             onClick={() => switchDept('at')}
             aria-pressed={activeDept === 'at'}
-            className={`flex-1 py-1.5 rounded-lg text-[11px] sm:text-xs font-heading font-bold tracking-wide transition-all ${
+            className={`flex-1 py-1.5 rounded-lg text-[0.6875rem] sm:text-xs font-heading font-bold tracking-wide transition-all ${
               activeDept === 'at'
                 ? 'bg-[#0077C8] text-white shadow'
                 : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -497,7 +528,7 @@ export default function Brochure({
           <button
             onClick={() => switchDept('docencia')}
             aria-pressed={activeDept === 'docencia'}
-            className={`flex-1 py-1.5 rounded-lg text-[11px] sm:text-xs font-heading font-bold tracking-wide transition-all ${
+            className={`flex-1 py-1.5 rounded-lg text-[0.6875rem] sm:text-xs font-heading font-bold tracking-wide transition-all ${
               activeDept === 'docencia'
                 ? 'bg-[#0077C8] text-white shadow'
                 : 'text-[#9FC6E8] hover:text-white hover:bg-white/10'
@@ -561,7 +592,10 @@ export default function Brochure({
                 itemRefs.current[page.id] = el;
               }}
               onClick={() => goToPage(page.id)}
-              className="flex-1 flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl transition-colors relative z-10"
+              title={soloIconos ? t.nav[page.id] : undefined}
+              className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 rounded-xl transition-colors relative z-10 ${
+                soloIconos ? 'py-2.5' : 'py-1.5'
+              }`}
             >
               <Icon
                 className={`w-[19px] h-[19px] transition-all duration-300 ${
@@ -570,9 +604,12 @@ export default function Brochure({
                 strokeWidth={active ? 2.4 : 2}
               />
               <span
-                className={`text-[9px] font-heading tracking-wide transition-colors duration-300 ${
+                ref={(el) => {
+                  labelRefs.current[page.id] = el;
+                }}
+                className={`text-[0.5625rem] font-heading tracking-wide whitespace-nowrap transition-colors duration-300 ${
                   active ? 'text-white font-bold' : 'text-slate-400 font-semibold'
-                }`}
+                } ${soloIconos ? 'sr-only' : ''}`}
               >
                 {t.nav[page.id]}
               </span>
@@ -613,7 +650,7 @@ export default function Brochure({
                     <h4 className="font-heading font-bold text-xs uppercase text-slate-800 dark:text-[#9FC6E8] mb-0.5">
                       {card.title}
                     </h4>
-                    <p className="text-[11px] sm:text-xs text-slate-700 dark:text-slate-300">
+                    <p className="text-[0.6875rem] sm:text-xs text-slate-700 dark:text-slate-300">
                       {card.text}
                     </p>
                   </div>

@@ -45,7 +45,7 @@ function FlipButton({ onClick, icon: Icon, label, tone = 'light' }) {
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-2 text-[11px] sm:text-xs font-heading font-bold uppercase tracking-wider transition-colors group cursor-pointer ${toneClasses}`}
+      className={`inline-flex items-center gap-2 text-[0.6875rem] sm:text-xs font-heading font-bold uppercase tracking-wider transition-colors group cursor-pointer ${toneClasses}`}
     >
       <Icon className="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500" />
       {label}
@@ -68,8 +68,8 @@ function NumberTile({ tone, index, eq, children }) {
       <span
         className={
           isDark
-            ? 'w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-full bg-white/15 text-[#4FB2F2] text-[9px] sm:text-[10px] font-bold font-mono-code flex items-center justify-center shrink-0 mt-0.5 border border-white/10'
-            : 'w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-full bg-[#0077C8] dark:bg-white/15 text-white dark:text-[#4FB2F2] text-[9px] sm:text-[10px] font-bold font-mono-code flex items-center justify-center shrink-0 mt-0.5 dark:border dark:border-white/10'
+            ? 'w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-full bg-white/15 text-[#4FB2F2] text-[0.5625rem] sm:text-[0.625rem] font-bold font-mono-code flex items-center justify-center shrink-0 mt-0.5 border border-white/10'
+            : 'w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-full bg-[#0077C8] dark:bg-white/15 text-white dark:text-[#4FB2F2] text-[0.5625rem] sm:text-[0.625rem] font-bold font-mono-code flex items-center justify-center shrink-0 mt-0.5 dark:border dark:border-white/10'
         }
       >
         {String(index + 1).padStart(2, '0')}
@@ -309,7 +309,7 @@ export default function MissionVision() {
                       <Compass className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div>
-                      <span className="text-[10px] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block">
+                      <span className="text-[0.625rem] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block">
                         {t.missionVision.mission.badge}
                       </span>
                       <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-[#003366] dark:text-[#9FC6E8] leading-tight">
@@ -359,7 +359,7 @@ export default function MissionVision() {
                 />
 
                 <div className="relative flex flex-col h-full">
-                  <span className="text-[10px] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block mb-1.5">
+                  <span className="text-[0.625rem] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block mb-1.5">
                     {t.missionVision.mission.backBadge}
                   </span>
                   <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-[#003366] dark:text-[#9FC6E8] leading-tight mb-6">
@@ -375,7 +375,7 @@ export default function MissionVision() {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] text-slate-500 dark:text-slate-300 font-mono-code">{t.missionVision.mission.footerNote}</span>
+                    <span className="text-[0.625rem] text-slate-500 dark:text-slate-300 font-mono-code">{t.missionVision.mission.footerNote}</span>
                     <FlipButton
                       onClick={() => toggleMision(false)}
                       icon={RotateCcw}
@@ -422,7 +422,7 @@ export default function MissionVision() {
                       <Eye className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div>
-                      <span className="text-[10px] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block">
+                      <span className="text-[0.625rem] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block">
                         {t.missionVision.vision.badge}
                       </span>
                       <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-[#003366] dark:text-[#9FC6E8] leading-tight">
@@ -470,7 +470,7 @@ export default function MissionVision() {
                 />
 
                 <div className="relative flex flex-col h-full">
-                  <span className="text-[10px] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block mb-1.5">
+                  <span className="text-[0.625rem] font-mono-code uppercase font-bold text-[#0077C8] dark:text-[#4FB2F2] tracking-wider block mb-1.5">
                     {t.missionVision.vision.backBadge}
                   </span>
                   <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-[#003366] dark:text-[#9FC6E8] leading-tight mb-6">
@@ -486,7 +486,7 @@ export default function MissionVision() {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] text-slate-500 dark:text-[#6E8AA8] font-mono-code">{t.missionVision.vision.footerNote}</span>
+                    <span className="text-[0.625rem] text-slate-500 dark:text-[#6E8AA8] font-mono-code">{t.missionVision.vision.footerNote}</span>
                     <FlipButton
                       onClick={() => toggleVision(false)}
                       icon={RotateCcw}

@@ -30,6 +30,21 @@ html, body {
   width: 100%;
 }
 
+/* Tamaño base del texto: en pantallas grandes (y con alto de sobra) crece
+   un poco, como si se subiera el zoom del navegador. Todo lo que está en
+   rem (textos, espacios de Tailwind) escala con esto; por eso los textos
+   van en rem y no en px. */
+@media (min-width: 1280px) and (min-height: 760px) {
+  html {
+    font-size: 17px;
+  }
+}
+@media (min-width: 1600px) and (min-height: 880px) {
+  html {
+    font-size: 18px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -509,26 +524,627 @@ h1, h2, h3, h4, h5, h6 {
     0 48px 76px -30px rgba(0, 8, 20, 0.6);
 }
 
-/* Fichas celeste de Áreas de Especialización: la "ilusión 3D" sale toda
-   de las sombras — realce blanco arriba (inset), bisel a los lados,
-   sombra oscura abajo (inset) y una sombra exterior grande teñida de
-   celeste. El hover sólo levanta 3px y agranda un poco la sombra. */
-.area-card {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 1px 2px rgba(1, 20, 42, 0.12),
-    0 10px 18px -10px rgba(1, 20, 42, 0.3),
-    0 22px 34px -20px rgba(1, 20, 42, 0.34);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+/* ===================================================================
+   Biblioteca de Áreas de Especialización (SpecializationAreas.jsx), en
+   la línea de la versión "Biblioteca" de la página web: un librero navy
+   con nichos, lomos de tela con filetes, y el área elegida como un libro
+   abierto de papel con tipografía de libro (Source Serif). Al pasar de
+   un área a otra se da vuelta una hoja.
+   =================================================================== */
+.bib {
+  --serif: 'Source Serif 4', Georgia, serif;
+  --papel: #FAF7F0;
+  --papel-izq: #F3EFE6;
+  --tinta-libro: #262B33;
+  --gris-libro: #6B6457;
+  --suave-libro: cubic-bezier(0.45, 0.05, 0.25, 1);
 }
 
-.area-card:hover {
-  transform: translateY(-4px);
+/* El librero: mueble navy con cuatro nichos (2 × 2), cornisa arriba y
+   zócalo abajo un poco más anchos que el mueble. */
+.bib-librero {
+  position: relative;
+  margin: 14px 10px 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #0B4277 0%, #003366 40%, #022B54 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 46px 60px -44px rgba(0, 31, 61, 0.75);
+}
+.bib-librero::before,
+.bib-librero::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  border-radius: 3px;
+  background: #001F3D;
+}
+.bib-librero::before {
+  top: -12px;
+  height: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.bib-librero::after {
+  bottom: -16px;
+  height: 18px;
+  left: -4px;
+  right: -4px;
+}
+
+.bib-nicho {
+  position: relative;
+  height: 13rem;
+  padding: 0 6px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #D3E5F4 0%, #EAF3FB 100%);
+  /* sombra del techo y de los costados del nicho */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 2px 4px rgba(1, 20, 42, 0.14),
-    0 16px 24px -12px rgba(1, 20, 42, 0.34),
-    0 32px 46px -22px rgba(1, 20, 42, 0.4);
+    inset 0 22px 24px -18px rgba(0, 31, 61, 0.5),
+    inset 14px 0 18px -16px rgba(0, 31, 61, 0.4),
+    inset -14px 0 18px -16px rgba(0, 31, 61, 0.4);
+}
+
+.bib-libro-btn,
+.bib-relleno {
+  padding: 0;
+  border: 0;
+  background: none;
+  margin: 0 1px;
+  display: flex;
+  align-items: flex-end;
+}
+.bib-libro-btn {
+  cursor: pointer;
+}
+.bib-libro-btn:focus {
+  outline: none;
+}
+
+/* Lomo de tela: el color un poco apagado, trama fina y filetes. */
+.bib-lomo {
+  --tela: color-mix(in srgb, var(--c), #1C2430 22%);
+  position: relative;
+  width: calc(var(--ancho) * var(--escala, 1));
+  height: calc(var(--alto) * var(--escala-alto, 1));
+  padding: 12px 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--tinta);
+  border-radius: 3px 3px 2px 2px;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 4px),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--tela), #000 30%) 0%,
+      var(--tela) 14%,
+      color-mix(in srgb, var(--tela), #fff 10%) 42%,
+      var(--tela) 72%,
+      color-mix(in srgb, var(--tela), #000 30%) 100%
+    );
+  box-shadow: 0 8px 12px -8px rgba(0, 31, 61, 0.7);
+  transform: translateY(var(--sube, 0));
+  transition: transform 0.6s var(--suave-libro), box-shadow 0.6s;
+}
+.bib-lomo-banda {
+  width: 100%;
+  height: 6px;
+  flex: none;
+  border-block: 1px solid color-mix(in srgb, var(--tinta) 40%, transparent);
+}
+.bib-lomo-titulo {
+  flex: 1;
+  min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.08;
+  text-align: center;
+}
+.bib-lomo svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  opacity: 0.8;
+}
+.bib-libro-btn:focus-visible .bib-lomo {
+  --sube: -6px;
+  outline: 2px solid #4FB2F2;
+  outline-offset: 2px;
+}
+/* El libro elegido queda un poco afuera del estante */
+.bib-libro-btn[aria-pressed='true'] .bib-lomo {
+  --sube: -18px;
+  box-shadow: 0 18px 18px -12px rgba(0, 31, 61, 0.7);
+}
+
+/* Salto: al pasar el mouse cada libro da un saltito completo aunque el
+   mouse ya se haya ido; pasar rápido por varios deja una estela. Va con
+   `translate`/`rotate` para sumarse al `transform` del lomo. */
+.bib-saltando .bib-lomo {
+  animation: bibSalto 0.75s cubic-bezier(0.3, 0.6, 0.3, 1) var(--demora, 0ms) backwards;
+}
+@keyframes bibSalto {
+  0% { translate: 0 0; rotate: 0deg; }
+  32% { translate: 0 -30px; rotate: -3deg; }
+  62% { translate: 0 4px; rotate: 1deg; }
+  80% { translate: 0 -5px; rotate: 0deg; }
+  100% { translate: 0 0; }
+}
+
+/* Libros de relleno: sin nombre, sólo el isotipo del ICAP en el lomo */
+.bib-relleno .bib-lomo {
+  --tela: color-mix(in srgb, var(--c), #1C2430 12%);
+  transition: opacity 0.5s, filter 0.5s;
+}
+/* Mientras la placa resalta las áreas, los de relleno se apagan */
+.bib-librero.resaltando .bib-relleno .bib-lomo {
+  opacity: 0.35;
+  filter: saturate(0.3);
+}
+
+/* Placa del ICAP al pie del librero: al tocarla, las áreas saltan una
+   tras otra (como la del nicho central en la página web). */
+.bib-placa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0.8rem 1.4rem 0.65rem;
+  border: 0;
+  text-align: center;
+  border-radius: 3px;
+  background: var(--papel);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 1px rgba(0, 51, 102, 0.12),
+    0 0 0 5px #fff,
+    0 0 0 6px rgba(0, 51, 102, 0.15),
+    0 16px 22px -14px rgba(0, 31, 61, 0.6);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
+}
+.bib-placa:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(0, 51, 102, 0.12),
+    0 0 0 5px #fff,
+    0 0 0 6px #0077C8,
+    0 22px 26px -14px rgba(0, 31, 61, 0.6);
+}
+.bib-placa:active {
+  transform: scale(0.97);
+}
+.bib-placa:focus-visible {
+  outline: 2px solid #4FB2F2;
+  outline-offset: 8px;
+}
+.bib-librero.resaltando + div .bib-placa {
+  animation: bibPlacaLate 0.9s ease;
+}
+@keyframes bibPlacaLate {
+  40% {
+    box-shadow:
+      0 0 0 1px rgba(0, 51, 102, 0.12),
+      0 0 0 5px #fff,
+      0 0 0 9px #4FB2F2,
+      0 0 34px 6px rgba(79, 178, 242, 0.6);
+  }
+}
+.bib-placa img {
+  width: 30px;
+}
+.bib-placa span {
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #003366;
+}
+.bib-placa small {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gris-libro);
+}
+.bib-relleno img {
+  width: min(16px, 60%);
+  margin-block: auto;
+  opacity: 0.5;
+  filter: brightness(0) invert(1);
+}
+.bib-relleno.claro img {
+  filter: none;
+  opacity: 0.55;
+}
+
+/* --- El libro abierto ------------------------------------------------- */
+.bib-libro {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  perspective: 2200px;
+}
+.bib-cara-der,
+.bib-cara-izq {
+  color: var(--tinta-libro);
+  font-family: var(--serif);
+}
+.bib-cara-der {
+  position: relative;
+  padding: 1.5rem 1.75rem 1.6rem;
+  background: var(--papel);
+  border-radius: 0 6px 6px 0;
+  box-shadow: inset 22px 0 26px -22px rgba(40, 30, 10, 0.35);
+}
+.bib-cara-izq {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 1.6rem;
+  border-radius: 6px 0 0 6px;
+  background: var(--papel-izq);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  box-shadow: inset -22px 0 26px -22px rgba(40, 30, 10, 0.35);
+}
+/* Las páginas fijas llevan el canto de las hojas de abajo y la sombra */
+.bib-pagina-der {
+  box-shadow:
+    inset 22px 0 26px -22px rgba(40, 30, 10, 0.35),
+    2px 2px 0 #ECE6D8,
+    4px 4px 0 #E2DACA,
+    14px 20px 44px -18px rgba(0, 0, 0, 0.55);
+}
+.bib-pagina-izq {
+  box-shadow:
+    inset -22px 0 26px -22px rgba(40, 30, 10, 0.35),
+    -2px 2px 0 #ECE6D8,
+    -4px 4px 0 #E2DACA,
+    -14px 20px 44px -18px rgba(0, 0, 0, 0.45);
+}
+
+.bib-cabecera {
+  display: block;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(38, 43, 51, 0.15);
+  text-align: center;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--gris-libro);
+}
+.bib-cara-der h3 {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.12;
+  color: #003366;
+  margin-bottom: 0.8rem;
+}
+.bib-capitular {
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.bib-capitular::first-letter {
+  float: left;
+  margin: 6px 8px 0 0;
+  font-size: 3.2em;
+  font-weight: 600;
+  line-height: 0.78;
+  color: #003366;
+}
+.bib-cara-der h4 {
+  margin-top: 1.1rem;
+  padding-bottom: 0.45rem;
+  font-family: 'Open Sans', system-ui, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gris-libro);
+}
+.bib-recientes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.86rem;
+}
+.bib-recientes li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid rgba(38, 43, 51, 0.12);
+}
+.bib-recientes li:last-child {
+  border-bottom: 1px solid rgba(38, 43, 51, 0.12);
+}
+.bib-recientes li > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bib-recientes li > span:last-child {
+  font-size: 0.8rem;
+  color: var(--gris-libro);
+  font-variant-numeric: tabular-nums;
+}
+.bib-enlace {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--serif);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: #003366;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 51, 102, 0.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.3s;
+}
+.bib-enlace:hover {
+  text-decoration-color: currentColor;
+}
+.bib-enlace svg {
+  display: inline;
+  width: 15px;
+  height: 15px;
+  margin-left: 4px;
+  vertical-align: -2px;
+  transition: transform 0.3s;
+}
+.bib-enlace:hover svg {
+  transform: translateX(3px);
+}
+
+.bib-cara-izq small {
+  font-family: 'Open Sans', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gris-libro);
+}
+.bib-filete {
+  width: 44px;
+  height: 2px;
+  background: var(--c);
+}
+.bib-cara-izq strong {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.12;
+  color: #003366;
+  max-width: 15rem;
+}
+.bib-cara-izq svg {
+  width: 26px;
+  height: 26px;
+  color: var(--gris-libro);
+}
+.bib-cara-izq em {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.4rem;
+  font-size: 0.7rem;
+  color: #8A8273;
+}
+.bib-agua {
+  position: absolute;
+  width: 46%;
+  right: -6%;
+  bottom: -6%;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Hojas que se pasan tocándolas (anterior a la izquierda, siguiente a
+   la derecha): con el mouse encima se levanta la esquina de abajo, como
+   invitando a dar vuelta la página. */
+.bib-pasable {
+  cursor: pointer;
+}
+.bib-pasable::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: width 0.35s var(--suave-libro), height 0.35s var(--suave-libro);
+}
+.bib-pasable.adelante::after {
+  right: 0;
+  border-radius: 6px 0 6px 0;
+  background: linear-gradient(315deg, #D8D0BE 0%, #EFE9DC 45%, rgba(0, 0, 0, 0.12) 50%, transparent 56%);
+}
+.bib-pasable.atras::after {
+  left: 0;
+  border-radius: 0 6px 0 6px;
+  background: linear-gradient(45deg, #D8D0BE 0%, #EFE9DC 45%, rgba(0, 0, 0, 0.12) 50%, transparent 56%);
+}
+.bib-pasable:hover::after {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+@media (hover: none) {
+  .bib-pasable::after {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+/* Cinta de marcador del color del área que cuelga bajo el libro */
+.bib-cinta {
+  position: absolute;
+  z-index: -1;
+  top: calc(100% - 4px);
+  right: 48px;
+  width: 12px;
+  height: 40px;
+  background: color-mix(in srgb, var(--c), #1C2430 22%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  transition: background-color 0.6s;
+}
+
+/* Hoja que se da vuelta al pasar de un área a otra */
+.bib-hoja,
+.bib-hoja-fija {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 3;
+}
+.bib-hoja {
+  transform-style: preserve-3d;
+  animation: 1s var(--suave-libro) forwards;
+}
+.bib-hoja.adelante,
+.bib-hoja-fija.der {
+  left: 50%;
+}
+.bib-hoja.atras,
+.bib-hoja-fija.izq {
+  left: 0;
+}
+.bib-hoja.adelante {
+  transform-origin: left center;
+  animation-name: bibHojaAdelante;
+}
+.bib-hoja.atras {
+  transform-origin: right center;
+  animation-name: bibHojaAtras;
+}
+@keyframes bibHojaAdelante {
+  to { transform: rotateY(-180deg); }
+}
+@keyframes bibHojaAtras {
+  to { transform: rotateY(180deg); }
+}
+.bib-hoja-frente,
+.bib-hoja-dorso {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.bib-hoja-dorso {
+  transform: rotateY(180deg);
+}
+/* La hoja se oscurece un poco a medio giro, como cuando se levanta */
+.bib-hoja-frente::after,
+.bib-hoja-dorso::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(40, 30, 10, 0.18), transparent 60%);
+  animation: bibSombraHoja 1s var(--suave-libro) both;
+}
+@keyframes bibSombraHoja {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Debajo de lg el libro abre de una sola página (la derecha) y el
+   contenido nuevo sólo aparece de a poco; el librero se achica y los
+   libros de relleno se esconden para que quepan las áreas. */
+@media (max-width: 1023.98px) {
+  .bib-libro {
+    grid-template-columns: 1fr;
+  }
+  .bib-cara-der {
+    border-radius: 6px;
+  }
+  .bib-pagina-izq,
+  .bib-hoja,
+  .bib-hoja-fija,
+  .bib-cinta {
+    display: none;
+  }
+  .bib-aparece > * {
+    animation: bookContentIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+@media (max-width: 639.98px) {
+  .bib-librero {
+    gap: 10px;
+    padding: 10px;
+  }
+  .bib-nicho {
+    height: 11.5rem;
+    padding: 0 4px;
+  }
+  .bib-lomo {
+    --escala: 0.8;
+    --escala-alto: 0.86;
+  }
+  .bib-lomo-titulo {
+    font-size: 0.66rem;
+    letter-spacing: 0;
+  }
+  .bib-relleno {
+    display: none;
+  }
+  .bib-cara-der {
+    padding: 1.3rem 1.2rem 1.4rem;
+  }
+}
+@media (max-width: 379.98px) {
+  .bib-librero {
+    margin-inline: 6px;
+    gap: 8px;
+    padding: 8px;
+  }
+  .bib-lomo {
+    --escala: 0.72;
+  }
+  .bib-lomo-titulo {
+    font-size: 0.62rem;
+  }
+  .bib-cara-der h3 {
+    font-size: 1.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bib-lomo,
+  .bib-pasable::after {
+    transition: none;
+  }
+  .bib-saltando .bib-lomo,
+  .bib-aparece > *,
+  .bib-librero.resaltando + div .bib-placa {
+    animation: none;
+  }
+  .bib-hoja,
+  .bib-hoja-fija {
+    display: none;
+  }
 }
 
 /* "Boop" sincronizado de las cartas de Impacto (DocenciaImpacto.jsx —

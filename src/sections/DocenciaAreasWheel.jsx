@@ -174,19 +174,19 @@ function AreaStackCard({ item, itemT, index, total, isFront, ui, tapHint, onSele
         className="absolute left-1/2 top-[55%] w-[80%] -translate-x-1/2 -translate-y-1/2 rotate-[-6deg] opacity-[0.14] pointer-events-none"
       />
 
-      <span className="relative font-mono-code text-[10px] sm:text-xs font-bold tracking-widest text-white/60 mt-1">
+      <span className="relative font-mono-code text-[0.625rem] sm:text-xs font-bold tracking-widest text-white/60 mt-1">
         {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
       </span>
 
       <div className="relative flex-1 flex flex-col items-center justify-center gap-3 sm:gap-4">
         <AreaIcon Icon={Icon} />
         <h3 className="font-heading font-extrabold text-lg sm:text-2xl text-white leading-tight px-1">{itemT.name}</h3>
-        <p className="text-[11px] sm:text-sm text-white/85 leading-relaxed px-1">{itemT.description}</p>
+        <p className="text-[0.6875rem] sm:text-sm text-white/85 leading-relaxed px-1">{itemT.description}</p>
       </div>
 
       {/* "Tocá para explorar": sólo en la tarjeta de adelante. */}
       {isFront === 0 && (
-        <span className="relative flex items-center gap-1.5 text-[10px] sm:text-xs font-bold tracking-wide uppercase text-white/80 mb-1" aria-hidden="true">
+        <span className="relative flex items-center gap-1.5 text-[0.625rem] sm:text-xs font-bold tracking-wide uppercase text-white/80 mb-1" aria-hidden="true">
           <span className="relative flex items-center justify-center shrink-0">
             <span className="absolute inline-flex h-5 w-5 rounded-full bg-white/25 animate-ping" />
             <MousePointerClick className="relative w-3.5 h-3.5 sm:w-4 sm:h-4" />

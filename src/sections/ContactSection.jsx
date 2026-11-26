@@ -143,16 +143,16 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="inline-block px-2.5 py-0.5 rounded-md bg-white/15 border border-white/20 text-white text-[9px] sm:text-[10px] font-mono-code font-bold tracking-wider uppercase mb-1">
+                  <div className="inline-block px-2.5 py-0.5 rounded-md bg-white/15 border border-white/20 text-white text-[0.5625rem] sm:text-[0.625rem] font-mono-code font-bold tracking-wider uppercase mb-1">
                     {t.contact.institutionTag}
                   </div>
                   <h3 className="font-heading font-extrabold text-xl sm:text-2xl text-white tracking-wider leading-none">ICAP</h3>
                   <p className="text-xs sm:text-sm text-white/90 font-medium leading-snug mt-1">{t.contact.orgName}</p>
-                  <p className="text-[10px] sm:text-[11px] text-white/65 font-mono-code mt-0.5 truncate">{t.contact.hqLine}</p>
+                  <p className="text-[0.625rem] sm:text-[0.6875rem] text-white/65 font-mono-code mt-0.5 truncate">{t.contact.hqLine}</p>
                 </div>
               </div>
 
-              <div className="relative mt-5 self-start inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/20 border border-white/15 text-[10px] sm:text-[11px] font-heading font-semibold text-white/85">
+              <div className="relative mt-5 self-start inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/20 border border-white/15 text-[0.625rem] sm:text-[0.6875rem] font-heading font-semibold text-white/85">
                 <DeptIcon className="w-3.5 h-3.5 text-[#bfe6ff]" />
                 <span>
                   {t.contact.topicLabel} <span className="font-extrabold text-white">{topic}</span>
@@ -167,7 +167,7 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                 <div className="flex items-start gap-3 p-3.5">
                   <MapPin className="w-4 h-4 text-[#0077C8] dark:text-[#4FB2F2] shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <p className="text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                       {t.contact.infoAddress}
                     </p>
                     <p className="text-xs text-slate-800 dark:text-slate-100 leading-relaxed">{contact.address}</p>
@@ -175,7 +175,7 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                       href={MAPS_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-1 text-[11px] font-heading font-bold text-[#0077C8] dark:text-[#4FB2F2] hover:underline"
+                      className="inline-flex items-center gap-1 mt-1 text-[0.6875rem] font-heading font-bold text-[#0077C8] dark:text-[#4FB2F2] hover:underline"
                     >
                       <Navigation className="w-3 h-3" />
                       {t.contact.directions}
@@ -189,7 +189,7 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                   >
                     <Phone className="w-4 h-4 text-[#0077C8] dark:text-[#4FB2F2] shrink-0 mt-0.5" />
                     <div className="min-w-0">
-                      <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      <p className="text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                         {t.contact.infoPhone}
                       </p>
                       <p className="text-xs font-semibold text-slate-800 dark:text-slate-100 truncate">{contact.phone}</p>
@@ -203,7 +203,7 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                   >
                     <Globe className="w-4 h-4 text-[#0077C8] dark:text-[#4FB2F2] shrink-0 mt-0.5" />
                     <div className="min-w-0">
-                      <p className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      <p className="text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                         {t.contact.infoWeb}
                       </p>
                       <p className="text-xs font-semibold text-slate-800 dark:text-slate-100 truncate">icap.ac.cr</p>
@@ -282,7 +282,7 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                   className="w-full text-white hover:brightness-110"
                   style={{ background: 'linear-gradient(135deg, #0090DD 0%, #0068AE 55%, #013A63 100%)' }}
                 />
-                <p className="text-[11px] text-center text-slate-500 dark:text-slate-300 mt-2">
+                <p className="text-[0.6875rem] text-center text-slate-500 dark:text-slate-300 mt-2">
                   {t.contact.saveHint}
                 </p>
               </div>

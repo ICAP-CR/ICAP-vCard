@@ -104,7 +104,7 @@ function AllyDetailBody({ ally, onNavigate }) {
   return (
     <div className="space-y-5">
       <div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">
+        <span className="text-[0.625rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">
           {t.allies.relatedProjects} · {proyectos.length}
         </span>
         <ul className="space-y-2">
@@ -129,7 +129,7 @@ function AllyDetailBody({ ally, onNavigate }) {
       </div>
 
       <div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">
+        <span className="text-[0.625rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">
           {t.allies.projectAreasLabel}
         </span>
         <div className="flex flex-wrap gap-1.5">
@@ -139,7 +139,7 @@ function AllyDetailBody({ ally, onNavigate }) {
             return (
               <span
                 key={id}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold shadow-sm"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[0.6875rem] font-semibold shadow-sm"
                 style={{ backgroundColor: e.color, color: e.text }}
               >
                 <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -254,7 +254,7 @@ export default function AlliesMarquee({ onNavigate }) {
         <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
           {t.allies.title}
         </h2>
-        <p className="text-[11px] sm:text-xs text-[#D6E9F7] mt-1.5">
+        <p className="text-[0.6875rem] sm:text-xs text-[#D6E9F7] mt-1.5">
           {t.allies.subtitle}
         </p>
       </div>
@@ -285,7 +285,7 @@ export default function AlliesMarquee({ onNavigate }) {
                   {item.label}
                 </span>
                 {item.proyectos.length > 0 && (
-                  <span className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold text-white/85">
+                  <span className="mt-1 inline-flex items-center gap-1.5 text-[0.625rem] font-semibold text-white/85">
                     <span className="flex gap-0.5">
                       {[...new Set(item.proyectos.flatMap((p) => p.etiquetas))].slice(0, 5).map((id) => (
                         <span key={id} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: getEtiqueta(id).color }} />
@@ -332,7 +332,7 @@ export default function AlliesMarquee({ onNavigate }) {
                   <AllyIconBadge ally={selected} size="w-8 h-8" textSize="text-xs" />
                 </div>
                 <div className="min-w-0">
-                  <span className="text-[10px] font-mono-code font-bold uppercase tracking-wider text-[#0077C8] block">
+                  <span className="text-[0.625rem] font-mono-code font-bold uppercase tracking-wider text-[#0077C8] block">
                     {t.allies.modalSubtitle}
                   </span>
                   <h4 className="font-heading font-extrabold text-base text-[#003366] dark:text-[#9FC6E8] leading-tight truncate">

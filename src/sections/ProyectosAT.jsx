@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Search, X, Building2, CalendarDays, MapPin, FolderOpen, Layers, ChevronDown, Handshake, Earth, RotateCcw } from 'lucide-react';
+import { Search, X, Building2, CalendarDays, MapPin, FolderOpen, Layers, ChevronDown, Handshake, Earth, RotateCcw, Map as MapIcon } from 'lucide-react';
 import KickerBadge from '../components/KickerBadge';
 import { ETIQUETAS, getEtiqueta, nombreEtiqueta } from '../data/etiquetas';
-import { PROYECTOS_AT, REGION_PAISES, proyectosDeSocio, tituloDe, clienteDe } from '../data/proyectosData';
+import { PROYECTOS_AT, proyectosDeSocio, tituloDe, clienteDe, lugarDe } from '../data/proyectosData';
 import { useLanguage } from '../i18n/LanguageContext';
 import EscudoICAP from '../components/EscudoICAP';
 import { BANDERAS } from '../data/banderas';
@@ -24,14 +24,19 @@ import { BANDERAS } from '../data/banderas';
  * `filtroInicial` llega desde otras secciones (Brochure.jsx):
  *  - { etiqueta }  "Ver proyectos relacionados" de Áreas.
  *  - { socio }     un socio del carrusel de Organismos y Socios.
- *  - { pais }      un país de Presencia.
+ *  - { pais }      un país de Presencia (o 'CA', Centroamérica).
  *  - { proyecto }  un proyecto puntual: queda abierto y a la vista.
  */
 
 // Países con banderita en el filtro: los del mapa de Presencia, de
 // norte a sur y después los de fuera del istmo.
 const PAISES = ['GT', 'BZ', 'SV', 'HN', 'NI', 'CR', 'PA', 'DO', 'MX', 'CO'];
-const paisesDe = (p) => REGION_PAISES[p.region] || [];
+
+// Opción extra del filtro de países: los proyectos cuya zona atendida es
+// Centroamérica (o la Región SICA) en general, sin países con nombre. No se
+// reparten entre los países porque no sabemos cuáles fueron atendidos.
+const CENTROAMERICA = 'CA';
+const tienePais = (p, code) => (code === CENTROAMERICA ? p.centroamerica : p.paises.includes(code));
 
 // 'AAAA-MM' del mes actual — un proyecto cuyo "hasta" sea este mes o
 // posterior se considera en curso.
@@ -57,16 +62,6 @@ const formatearPeriodo = (p, locale) => {
   return desde === hasta ? desde : `${desde} – ${hasta}`;
 };
 
-const REGION_EN = {
-  'Costa Rica': 'Costa Rica',
-  Guatemala: 'Guatemala',
-  'Centroamérica': 'Central America',
-  'Centroamérica y Rep. Dominicana': 'Central America and Dominican Rep.',
-  'Centroamérica y Caribe': 'Central America and the Caribbean',
-  'Costa Rica, Colombia y México': 'Costa Rica, Colombia and Mexico',
-  'Internacional (Unión Europea)': 'International (European Union)'
-};
-
 // Para buscar sin que importen tildes ni mayúsculas ("genero" encuentra
 // "Género").
 const normalizar = (s) =>
@@ -80,12 +75,12 @@ const alternar = (lista, valor) => (lista.includes(valor) ? lista.filter((v) => 
 
 function EstadoBadge({ activo, t }) {
   return activo ? (
-    <span className="inline-flex items-center gap-1 text-[10px] font-mono-code font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+    <span className="inline-flex items-center gap-1 text-[0.625rem] font-mono-code font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
       {t.statusActive}
     </span>
   ) : (
-    <span className="text-[10px] font-mono-code font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    <span className="text-[0.625rem] font-mono-code font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400">
       {t.statusDone}
     </span>
   );
@@ -107,19 +102,19 @@ function PuntosEtiquetas({ etiquetas, lang }) {
 }
 
 /**
- * Botón de país (o el de "Todos", con el mapamundi), como en
- * referencias-proyectos (BandaPaises.jsx): un disco claro y, adentro, la
- * bandera real en un círculo más pequeño. Seleccionado, el anillo de luz
- * gira alrededor del disco. Mientras se filtra, los no elegidos se
- * atenúan un poco.
+ * Botón de país (o el de "Todos", con el mapamundi, y el de Centroamérica,
+ * con un mapa), como en referencias-proyectos (BandaPaises.jsx): un disco
+ * claro y, adentro, la bandera real en un círculo más pequeño.
+ * Seleccionado, el anillo de luz gira alrededor del disco. Mientras se
+ * filtra, los no elegidos se atenúan un poco.
  */
-function BanderaPais({ code, nombre, n, activo, atenuado, onClick }) {
+function BanderaPais({ code, icono: Icono = Earth, nombre, titulo, n, activo, atenuado, onClick }) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={activo}
-      title={n == null ? nombre : `${nombre} · ${n}`}
+      title={[titulo || nombre, n].filter((x) => x != null).join(' · ')}
       className={`group flex flex-col items-center gap-1.5 transition-opacity duration-200 ${
         (n === 0 && !activo) ? 'opacity-35' : atenuado ? 'opacity-60 hover:opacity-100' : ''
       }`}
@@ -138,7 +133,7 @@ function BanderaPais({ code, nombre, n, activo, atenuado, onClick }) {
               : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 group-hover:bg-[#EAF3FB] dark:group-hover:bg-white/10'
           }`}
         >
-          {/* Bandera (o mapamundi) en su círculo, más pequeño que el disco */}
+          {/* Bandera (o ícono) en su círculo, más pequeño que el disco */}
           {code ? (
             <img
               src={BANDERAS[code]}
@@ -148,14 +143,14 @@ function BanderaPais({ code, nombre, n, activo, atenuado, onClick }) {
             />
           ) : (
             <span className="w-[72%] h-[72%] rounded-full bg-[#0077C8] text-white flex items-center justify-center">
-              <Earth className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+              <Icono className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
             </span>
           )}
         </span>
         {/* Cuántos proyectos daría al sumarlo */}
         {n != null && (
           <span
-            className={`absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-[9px] font-mono-code font-bold flex items-center justify-center ring-2 ring-[#D6E9F7] dark:ring-[#001F3D] ${
+            className={`absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-[0.5625rem] font-mono-code font-bold flex items-center justify-center ring-2 ring-[#D6E9F7] dark:ring-[#001F3D] ${
               activo ? 'bg-[#0077C8] text-white' : 'bg-white dark:bg-[#0B2340] text-slate-600 dark:text-slate-300'
             }`}
           >
@@ -164,7 +159,7 @@ function BanderaPais({ code, nombre, n, activo, atenuado, onClick }) {
         )}
       </span>
       <span
-        className={`text-[10px] sm:text-[11px] font-heading leading-tight text-center ${
+        className={`text-[0.625rem] sm:text-[0.6875rem] font-heading leading-tight text-center ${
           activo ? 'font-extrabold text-[#003366] dark:text-white' : 'font-semibold text-slate-600 dark:text-slate-300'
         }`}
       >
@@ -206,7 +201,7 @@ function HuecoProyecto({ onClose, t }) {
       className="h-[132px] w-full rounded-2xl border-2 border-dashed border-[#0077C8]/35 dark:border-[#4FB2F2]/35 bg-[#0077C8]/[0.04] dark:bg-white/[0.03] flex flex-col items-center justify-center gap-1 text-[#0077C8] dark:text-[#4FB2F2] transition-colors hover:bg-[#0077C8]/[0.08]"
     >
       <ChevronDown className="w-5 h-5 animate-bounce" />
-      <span className="text-[10px] font-mono-code font-bold uppercase tracking-wider">{t.openBelow}</span>
+      <span className="text-[0.625rem] font-mono-code font-bold uppercase tracking-wider">{t.openBelow}</span>
     </button>
   );
 }
@@ -217,7 +212,7 @@ function HuecoProyecto({ onClose, t }) {
  */
 function DetalleProyecto({ p, columna, columnas, onClose, t, tAll, lang, locale, ahora, panelRef }) {
   const flecha = `${((columna + 0.5) / columnas) * 100}%`;
-  const paises = paisesDe(p);
+  const paises = p.paises;
   return (
     <div ref={panelRef} className="col-span-full relative pt-2 animate-proyecto-in">
       <span
@@ -252,7 +247,7 @@ function DetalleProyecto({ p, columna, columnas, onClose, t, tAll, lang, locale,
               return (
                 <span
                   key={id}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-heading font-bold"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[0.625rem] sm:text-[0.6875rem] font-heading font-bold"
                   style={{ backgroundColor: e.color, color: e.text }}
                 >
                   <Icon className="w-3 h-3 shrink-0" />
@@ -267,7 +262,7 @@ function DetalleProyecto({ p, columna, columnas, onClose, t, tAll, lang, locale,
               [Building2, t.client, clienteDe(p, lang)],
               [Layers, t.clientType, t.clientTypes[p.tipoCliente]],
               [CalendarDays, t.period, formatearPeriodo(p, locale)],
-              [MapPin, t.region, lang === 'en' ? REGION_EN[p.region] || p.region : p.region]
+              [MapPin, t.region, lugarDe(p, lang)]
             ].map(([Icon, etiqueta, valor]) => (
               <div
                 key={etiqueta}
@@ -275,10 +270,10 @@ function DetalleProyecto({ p, columna, columnas, onClose, t, tAll, lang, locale,
               >
                 <Icon className="w-4 h-4 text-[#0077C8] dark:text-[#4FB2F2] shrink-0 mt-0.5" />
                 <div className="min-w-0">
-                  <dt className="font-heading font-bold text-[10px] uppercase tracking-wide text-slate-500 dark:text-[#9FC6E8]">
+                  <dt className="font-heading font-bold text-[0.625rem] uppercase tracking-wide text-slate-500 dark:text-[#9FC6E8]">
                     {etiqueta}
                   </dt>
-                  <dd className="text-xs sm:text-[13px] text-slate-800 dark:text-slate-100">{valor}</dd>
+                  <dd className="text-xs sm:text-[0.8125rem] text-slate-800 dark:text-slate-100">{valor}</dd>
                 </div>
               </div>
             ))}
@@ -303,7 +298,7 @@ function DetalleProyecto({ p, columna, columnas, onClose, t, tAll, lang, locale,
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-mono-code text-slate-400">#{p.id}</span>
+            <span className="text-[0.625rem] font-mono-code text-slate-400">#{p.id}</span>
           </div>
         </div>
       </article>
@@ -377,7 +372,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
     (p) => (!q || normalizar(`${p.titulo} ${p.tituloEn || ''} ${p.cliente} ${p.clienteEn || ''}`).includes(q)) && (!idsSocio || idsSocio.has(p.id))
   );
   const cumpleEtiquetas = (p, lista) => lista.every((id) => p.etiquetas.includes(id));
-  const cumplePaises = (p, lista) => lista.every((code) => paisesDe(p).includes(code));
+  const cumplePaises = (p, lista) => lista.every((code) => tienePais(p, code));
   const visibles = base.filter((p) => cumpleEtiquetas(p, etiquetas) && cumplePaises(p, paises));
 
   // Cada cápsula / bandera dice cuántos resultados quedarían al sumarla
@@ -387,7 +382,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
       ? visibles.length
       : visibles.filter((p) => p.etiquetas.includes(id)).length;
   const conteoPais = (code) =>
-    paises.includes(code) ? visibles.length : visibles.filter((p) => paisesDe(p).includes(code)).length;
+    paises.includes(code) ? visibles.length : visibles.filter((p) => tienePais(p, code)).length;
 
   const hayFiltros = busqueda || etiquetas.length || paises.length || socio;
   const limpiar = () => {
@@ -426,7 +421,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
                 <div className="font-heading font-extrabold text-xl sm:text-2xl text-[#0077C8] dark:text-[#4FB2F2] leading-none">
                   {valor}
                 </div>
-                <div className="text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-tight">{etq}</div>
+                <div className="text-[0.625rem] sm:text-[0.6875rem] text-slate-600 dark:text-slate-300 mt-1 leading-tight">{etq}</div>
               </div>
             ))}
           </div>
@@ -455,10 +450,10 @@ export default function ProyectosAT({ filtroInicial = null }) {
         </div>
 
         {/* Países: banderitas en círculo, selección múltiple */}
-        <p className="text-center font-heading font-bold text-[10px] uppercase tracking-[0.14em] text-[#0077C8] dark:text-[#4FB2F2]">
+        <p className="text-center font-heading font-bold text-[0.625rem] uppercase tracking-[0.14em] text-[#0077C8] dark:text-[#4FB2F2]">
           {t.countriesLabel}
         </p>
-        <p className="text-center text-[10px] text-slate-500 dark:text-slate-400 mb-3">{t.countriesHint}</p>
+        <p className="text-center text-[0.625rem] text-slate-500 dark:text-slate-400 mb-3">{t.countriesHint}</p>
         <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-4 max-w-3xl mx-auto mb-7 pt-1">
           {/* Mapamundi: todos los países (quita la selección) */}
           <BanderaPais
@@ -466,6 +461,16 @@ export default function ProyectosAT({ filtroInicial = null }) {
             activo={!paises.length}
             atenuado={paises.length > 0}
             onClick={() => setPaises([])}
+          />
+          {/* Centroamérica en general: justo después de "Todos", antes de los países */}
+          <BanderaPais
+            icono={MapIcon}
+            nombre={t.centralAmerica}
+            titulo={t.centralAmericaHint}
+            n={conteoPais(CENTROAMERICA)}
+            activo={paises.includes(CENTROAMERICA)}
+            atenuado={paises.length > 0 && !paises.includes(CENTROAMERICA)}
+            onClick={() => setPaises((prev) => alternar(prev, CENTROAMERICA))}
           />
           {PAISES.map((code) => (
             <BanderaPais
@@ -482,15 +487,15 @@ export default function ProyectosAT({ filtroInicial = null }) {
 
         {/* Etiquetas: grilla pareja de cápsulas, selección múltiple. Cada
             una lleva su color; al activarla se rellena de ese color. */}
-        <p className="text-center font-heading font-bold text-[10px] uppercase tracking-[0.14em] text-[#0077C8] dark:text-[#4FB2F2]">
+        <p className="text-center font-heading font-bold text-[0.625rem] uppercase tracking-[0.14em] text-[#0077C8] dark:text-[#4FB2F2]">
           {t.tagsLabel}
         </p>
-        <p className="text-center text-[10px] text-slate-500 dark:text-slate-400 mb-3">{t.tagsHint}</p>
+        <p className="text-center text-[0.625rem] text-slate-500 dark:text-slate-400 mb-3">{t.tagsHint}</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-6">
           <button
             onClick={() => setEtiquetas([])}
             aria-pressed={!etiquetas.length}
-            className={`col-span-2 sm:col-span-1 min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-2xl text-[11px] sm:text-xs font-heading font-bold border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
+            className={`col-span-2 sm:col-span-1 min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-2xl text-[0.6875rem] sm:text-xs font-heading font-bold border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
               !etiquetas.length
                 ? 'bg-[#003366] dark:bg-[#0077C8] text-white border-transparent shadow-lg'
                 : 'bg-white dark:bg-white/5 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-white/10 hover:shadow-md'
@@ -506,7 +511,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
                 key={e.id}
                 onClick={() => setEtiquetas((prev) => alternar(prev, e.id))}
                 aria-pressed={activo}
-                className={`min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-2xl text-left text-[11px] sm:text-xs font-heading font-bold border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
+                className={`min-h-[44px] flex items-center gap-2 px-3 py-1.5 rounded-2xl text-left text-[0.6875rem] sm:text-xs font-heading font-bold border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
                   activo ? '' : 'hover:shadow-md'
                 } ${!n && !activo ? 'opacity-45' : ''}`}
                 style={
@@ -533,7 +538,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
         {/* Socio que llegó desde el carrusel de Organismos y Socios */}
         {socio && (
           <div className="flex justify-center mb-4">
-            <span className="inline-flex items-center gap-2 pl-3 pr-1 py-1 rounded-full bg-[#003366] text-white text-[11px] sm:text-xs font-heading font-semibold shadow">
+            <span className="inline-flex items-center gap-2 pl-3 pr-1 py-1 rounded-full bg-[#003366] text-white text-[0.6875rem] sm:text-xs font-heading font-semibold shadow">
               <Handshake className="w-3.5 h-3.5" />
               {t.partnerFilter}: {tAll.allies.items[socio]?.name || socio}
               <button
@@ -548,7 +553,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
         )}
 
         {/* Conteo + limpiar */}
-        <div className="flex items-center justify-between gap-3 mb-4 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300">
+        <div className="flex items-center justify-between gap-3 mb-4 text-[0.6875rem] sm:text-xs text-slate-600 dark:text-slate-300">
           <span>
             {t.showing} <strong className="text-slate-900 dark:text-white">{visibles.length}</strong> {t.of} {resumen.total}{' '}
             {t.projectsWord} · <span className="opacity-80">{t.tapHint}</span>
@@ -557,7 +562,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
           <button
             onClick={limpiar}
             disabled={!hayFiltros}
-            className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-xl font-heading font-bold text-[11px] sm:text-xs bg-[#0077C8] text-white shadow-md shadow-[#0077C8]/25 transition-all hover:bg-[#005A96] hover:-translate-y-0.5 active:scale-95 disabled:bg-white/70 disabled:dark:bg-white/5 disabled:text-slate-400 disabled:shadow-none disabled:translate-y-0 disabled:cursor-default"
+            className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-xl font-heading font-bold text-[0.6875rem] sm:text-xs bg-[#0077C8] text-white shadow-md shadow-[#0077C8]/25 transition-all hover:bg-[#005A96] hover:-translate-y-0.5 active:scale-95 disabled:bg-white/70 disabled:dark:bg-white/5 disabled:text-slate-400 disabled:shadow-none disabled:translate-y-0 disabled:cursor-default"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             {t.clearFilters}

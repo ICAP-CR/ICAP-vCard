@@ -101,7 +101,7 @@ export default function SectionsStrip({ onNavigate, pages }) {
 
   return (
     <div className="relative z-10 w-full">
-      <span className="block text-center text-[9px] sm:text-[10px] font-bold tracking-widest uppercase text-[#9FC6E8]/85 mb-2.5 sm:mb-3 font-mono-code">
+      <span className="block text-center text-[0.5625rem] sm:text-[0.625rem] font-bold tracking-widest uppercase text-[#9FC6E8]/85 mb-2.5 sm:mb-3 font-mono-code">
         {t.sectionsStrip.kicker}
       </span>
 
@@ -168,7 +168,7 @@ export default function SectionsStrip({ onNavigate, pages }) {
                 />
               </span>
               <span
-                className={`text-[9px] sm:text-xs font-heading tracking-wide text-center leading-tight transition-colors duration-300 ${
+                className={`text-[0.5625rem] sm:text-xs font-heading tracking-wide text-center leading-tight transition-colors duration-300 ${
                   active ? 'text-white font-bold' : 'text-white/50 font-semibold'
                 }`}
               >

@@ -23,7 +23,7 @@ function DeptBadge({ dept, label }) {
   const Icon = isAT ? Handshake : GraduationCap;
   return (
     <div
-      className="relative inline-flex items-center gap-2 sm:gap-2.5 pl-1 pr-4 sm:pr-5 py-1 rounded-full bg-[#002a52]/70 border border-[#7dd3fc]/50 text-white text-[13px] sm:text-base font-heading font-extrabold tracking-wide shadow-[0_0_22px_-8px_rgba(125,211,252,0.7)] mb-[var(--hero-gap)] animate-hero-rise"
+      className="relative inline-flex items-center gap-2 sm:gap-2.5 pl-1 pr-4 sm:pr-5 py-1 rounded-full bg-[#002a52]/70 border border-[#7dd3fc]/50 text-white text-[0.8125rem] sm:text-base font-heading font-extrabold tracking-wide shadow-[0_0_22px_-8px_rgba(125,211,252,0.7)] mb-[var(--hero-gap)] animate-hero-rise"
       style={{ animationDelay: '90ms' }}
     >
       <span className="relative shrink-0 w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center">
@@ -181,7 +181,7 @@ export default function Hero({ onNavigate, pages, dept = 'at' }) {
 
         {/* Badge institucional, ahora debajo del subtítulo */}
         <div
-          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-[#9FC6E8] text-[11px] sm:text-xs font-semibold tracking-widest uppercase shadow-sm animate-hero-rise"
+          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-[#9FC6E8] text-[0.6875rem] sm:text-xs font-semibold tracking-widest uppercase shadow-sm animate-hero-rise"
           style={{ animationDelay: '380ms' }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#7dd3fc]" />
@@ -199,7 +199,7 @@ export default function Hero({ onNavigate, pages, dept = 'at' }) {
             main?.scrollBy({ top: main.clientHeight, behavior: 'smooth' });
           }}
         >
-          <span className="text-[10px] tracking-widest text-[#9FC6E8] uppercase font-bold font-mono-code">
+          <span className="text-[0.625rem] tracking-widest text-[#9FC6E8] uppercase font-bold font-mono-code">
             {t.hero.scrollHint}
           </span>
           <ChevronDown className="w-4 h-4 text-[#9FC6E8] animate-bounce" />
