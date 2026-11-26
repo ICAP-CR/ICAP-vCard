@@ -258,7 +258,8 @@ export default function FichaCatalogo({ areas, actual, adelante, recientes, lang
             {/* Marca de agua: el escudo del ICAP sobre la hoja. Está fuera de
                 la ficha (que se remonta con cada área), así su aparición se
                 ve sólo la primera vez que se entra a la sección. */}
-            <EscudoICAP tono="navy" plano className="cat-marca" />
+            <EscudoICAP tono="navy" plano className="cat-marca dark:hidden" />
+            <EscudoICAP tono="white" plano className="cat-marca hidden dark:block" />
             <div
               key={`${area.id}-${lang}`}
               className={`cat-ficha cat-activa ${sinMovimiento() ? '' : 'entra'}`}

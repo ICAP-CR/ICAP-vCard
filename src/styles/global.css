@@ -518,63 +518,186 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===================================================================
-   Áreas de Especialización (SpecializationAreas.jsx): fichero de
-   tarjetas celestes + el área elegida como una ficha de archivero que
+   Áreas de Especialización (SpecializationAreas.jsx): índice de archivo
+   vertical + el área elegida como una ficha de archivero que
    sale de un cajón (FichaCatalogo.jsx), con el escudo como marca de agua. El
    librero y el libro abierto quedaron guardados en
    _respaldos/biblioteca-areas/ para la página web.
    =================================================================== */
-/* Fichero de tarjetas de Áreas (SpecializationAreas.jsx): las tarjetas
-   celestes de la versión anterior. La "ilusión 3D" sale de las sombras
-   (realce blanco arriba, sombra abajo); la elegida lleva anillo blanco
-   y, desde lg, se corre un poco hacia la ficha de catálogo. */
-.ficha-area {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 1px 2px rgba(1, 20, 42, 0.12),
-    0 10px 18px -10px rgba(1, 20, 42, 0.3),
-    0 22px 34px -20px rgba(1, 20, 42, 0.34);
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+/* --- Índice de áreas (SpecializationAreas.jsx) ------------------------
+   Una columna de cápsulas navy con letra blanca, una por área (número,
+   puntito de su color, nombre e ícono), sin caja alrededor. La columna es
+   angosta y va pegada a la ficha; la cápsula elegida se pone en el azul
+   del ICAP y se sale un poco hacia la ficha. Movimientos cortos y
+   sobrios. */
+.arch {
+  position: relative;
+  width: 100%;
+  max-width: 19rem;
+  margin-left: auto;
 }
-.ficha-area:hover {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 2px 4px rgba(1, 20, 42, 0.14),
-    0 16px 24px -12px rgba(1, 20, 42, 0.34),
-    0 32px 46px -22px rgba(1, 20, 42, 0.4);
+.arch-cabecera {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.35rem 0.5rem;
+  margin-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(0, 51, 102, 0.14);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0077C8;
 }
-.ficha-area[aria-pressed='true'] {
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 5px rgba(79, 178, 242, 0.45),
-    0 18px 30px -14px rgba(1, 20, 42, 0.55);
+.arch-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-.ficha-area:focus {
+.arch-carpeta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 1.85rem;
+  /* Lugar para el número (izquierda) y el ícono (derecha) */
+  padding: 0 2.3rem;
+  border: 0;
+  border-radius: 999px;
+  text-align: left;
+  color: #FFFFFF;
+  background: #003366;
+  box-shadow: 0 4px 10px -6px rgba(0, 31, 61, 0.55);
+  cursor: pointer;
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s,
+    box-shadow 0.4s;
+}
+/* Número en gris, pegado al borde izquierdo */
+.arch-num {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #94A3B8;
+}
+.arch-nombre {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Raleway', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.74rem;
+}
+/* Ícono pintado del color del área, en un circulito blanco pegado al
+   borde derecho (así se lee cualquier color sobre el navy) */
+.arch-logo {
+  position: absolute;
+  right: 0.22rem;
+  top: 50%;
+  width: 1.42rem;
+  height: 1.42rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #FFFFFF;
+  transform: translateY(-50%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.arch-icono {
+  width: 13px;
+  height: 13px;
+  color: var(--c);
+  stroke-width: 2.3;
+}
+.arch-carpeta:hover {
+  background: #0B4A7E;
+}
+/* Estela: al pasar el mouse la cápsula se alarga hacia la ficha y vuelve
+   (ver estela en SpecializationAreas.jsx) */
+.arch-estela {
+  animation: archEstela 0.65s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+@keyframes archEstela {
+  0% { width: 100%; }
+  35% { width: calc(100% + 1.1rem); }
+  70% { width: calc(100% - 0.15rem); }
+  100% { width: 100%; }
+}
+.arch-carpeta:focus {
   outline: none;
 }
-.ficha-area:focus-visible {
-  box-shadow:
-    0 0 0 2px #ffffff,
-    0 0 0 5px #4FB2F2;
+.arch-carpeta:focus-visible {
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #4FB2F2;
 }
-@media (min-width: 1024px) {
-  .ficha-area[aria-pressed='true'] {
-    transform: translateX(6px);
-  }
+/* La elegida: azul del ICAP y se sale hacia la ficha */
+.arch-carpeta[aria-pressed='true'] {
+  background: #0077C8;
+  transform: translateX(0.9rem);
+  box-shadow:
+    0 0 0 2px #FFFFFF,
+    0 10px 20px -10px rgba(0, 31, 61, 0.6);
+}
+.arch-carpeta[aria-pressed='true'] .arch-num {
+  color: #D6E9F7;
 }
 
-/* Saltito al pasar el mouse: completo aunque el mouse ya se haya ido, así
-   pasar rápido por varias deja una estela. Va con `translate` para
-   sumarse al `transform` de la elegida. */
-.ficha-salta {
-  animation: fichaSalto 0.6s cubic-bezier(0.3, 0.6, 0.3, 1);
+/* Modo oscuro: el navy de las cápsulas se aclara un poco para no
+   perderse en el fondo de la sección */
+.dark .arch-cabecera {
+  color: #9FC6E8;
+  border-bottom-color: rgba(255, 255, 255, 0.14);
 }
-@keyframes fichaSalto {
-  0% { translate: 0 0; }
-  35% { translate: 0 -7px; }
-  65% { translate: 0 1px; }
-  82% { translate: 0 -2px; }
-  100% { translate: 0 0; }
+.dark .arch-carpeta {
+  background: #0B4A7E;
+}
+.dark .arch-carpeta:hover {
+  background: #11589A;
+}
+.dark .arch-carpeta[aria-pressed='true'] {
+  background: #0077C8;
+}
+
+/* Debajo de lg: tira horizontal de cápsulas que se desliza; la elegida
+   sube apenas */
+@media (max-width: 1023.98px) {
+  .arch {
+    max-width: none;
+  }
+  .arch-cabecera {
+    margin: 0 1rem 0.35rem;
+    padding: 0 0 0.45rem;
+  }
+  .arch-lista {
+    flex-direction: row;
+    gap: 6px;
+    padding: 0.35rem 1rem 0.4rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .arch-lista::-webkit-scrollbar {
+    display: none;
+  }
+  .arch-carpeta {
+    flex: none;
+    width: auto;
+    scroll-snap-align: center;
+  }
+  .arch-estela {
+    animation: none;
+  }
+  .arch-carpeta[aria-pressed='true'] {
+    transform: translateY(-2px);
+  }
 }
 
 /* --- Archivero (FichaCatalogo.jsx) -------------------------------------
@@ -590,6 +713,32 @@ h1, h2, h3, h4, h5, h6 {
 
 .cat-escena {
   position: relative;
+}
+/* Desde lg la ficha se estira hasta el alto de la columna de áreas: la
+   pila crece y el cajón queda alineado con la última cápsula. El texto
+   de ayuda va debajo sin sumar alto. */
+@media (min-width: 1024px) {
+  .cat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .cat-escena {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .cat-pila {
+    flex: 1;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .cat-pista {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+  }
 }
 
 /* Fila de pestañas en orden (ver LUGARES en FichaCatalogo.jsx). Cada una
@@ -1009,7 +1158,8 @@ h1, h2, h3, h4, h5, h6 {
 .cat-cajon {
   position: relative;
   z-index: 5;
-  margin-top: calc(var(--oculto) * -1);
+  /* Del mismo ancho que la hoja (.cat-pila) */
+  margin: calc(var(--oculto) * -1) 5% 0;
   height: 3.9rem;
   padding: 0 0.9rem;
   display: flex;
@@ -1094,6 +1244,68 @@ h1, h2, h3, h4, h5, h6 {
   color: #9FC6E8;
 }
 
+/* Tema oscuro: la hoja pasa al azul noche de las tarjetas del sitio
+   (#0B2340), con texto claro y bordes translúcidos */
+.dark .cat-ficha {
+  color: #C9D9E8;
+  background:
+    radial-gradient(120% 70% at 100% 0%, rgba(79, 178, 242, 0.12), transparent 60%),
+    linear-gradient(180deg, #0F2B4C 0%, #0B2340 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 24px 40px -24px rgba(0, 0, 0, 0.7);
+}
+.dark .cat-atras {
+  background: linear-gradient(180deg, #13335A, #0E2A4B);
+}
+.dark .cat-cabecera {
+  color: #4FB2F2;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.dark .cat-titulo {
+  color: #FFFFFF;
+}
+.dark .cat-desc {
+  color: #C9D9E8;
+}
+.dark .cat-rotulo {
+  color: #4FB2F2;
+}
+.dark .cat-recientes li {
+  color: #E2ECF5;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .cat-recientes li > span:last-child {
+  color: #9FC6E8;
+}
+.dark .cat-enlace {
+  color: #4FB2F2;
+}
+.dark .cat-enlace:hover {
+  color: #FFFFFF;
+}
+.dark .cat-brillo {
+  background: radial-gradient(circle at var(--gx, 30%) var(--gy, 10%), rgba(255, 255, 255, 0.12), transparent 45%);
+}
+.dark .cat-pestana {
+  color: #D6E9F7;
+  background: linear-gradient(180deg, #16385F, #0F2B4C);
+  box-shadow: inset 0 3px 0 var(--c), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 -2px 8px -4px rgba(0, 0, 0, 0.5);
+}
+.dark .cat-pestana.actual {
+  color: var(--t);
+  background: var(--c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 -4px 12px -6px rgba(0, 0, 0, 0.6);
+}
+/* El cajón ya es navy: en oscuro lleva un filo claro para no fundirse */
+.dark .cat-cajon {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 22px 36px -20px rgba(0, 0, 0, 0.8);
+}
+
 @media (max-width: 639.98px) {
   .cat-ficha {
     padding: 1rem 1.1rem calc(var(--oculto) + 1.2rem);
@@ -1101,6 +1313,11 @@ h1, h2, h3, h4, h5, h6 {
   .cat-pila,
   .cat-pestanas {
     margin: 0 3%;
+  }
+  .cat-cajon {
+    margin-left: 3%;
+    margin-right: 3%;
+    padding: 0 0.6rem;
   }
   .cat-titulo {
     font-size: 1.3rem;
@@ -1123,13 +1340,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ficha-area,
+  .arch-carpeta,
   .cat-brillo,
   .cat-pestana {
     transition: none;
   }
-  .ficha-salta,
   .cat-activa.entra,
+  .arch-estela,
   .cat-marca,
   .cat-contenido.revela *,
   .cat-pestana {
