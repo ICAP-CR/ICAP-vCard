@@ -2,7 +2,7 @@ import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 
 import { Search, X, Building2, CalendarDays, MapPin, FolderOpen, Layers, ChevronDown, Handshake, Earth, RotateCcw, Map as MapIcon } from 'lucide-react';
 import KickerBadge from '../components/KickerBadge';
 import { ETIQUETAS, getEtiqueta, nombreEtiqueta } from '../data/etiquetas';
-import { PROYECTOS_AT, proyectosDeSocio, tituloDe, clienteDe, lugarDe } from '../data/proyectosData';
+import { PROYECTOS_AT, proyectosDeSocio, tituloDe, clienteDe, lugarDe, totalClientes } from '../data/proyectosData';
 import { useLanguage } from '../i18n/LanguageContext';
 import EscudoICAP from '../components/EscudoICAP';
 import { BANDERAS } from '../data/banderas';
@@ -358,7 +358,7 @@ export default function ProyectosAT({ filtroInicial = null }) {
   const resumen = useMemo(
     () => ({
       total: PROYECTOS_AT.length,
-      clientes: new Set(PROYECTOS_AT.map((p) => p.cliente)).size,
+      clientes: totalClientes,
       activos: PROYECTOS_AT.filter((p) => enCurso(p, ahora)).length
     }),
     [ahora]

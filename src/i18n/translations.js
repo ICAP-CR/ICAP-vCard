@@ -109,7 +109,7 @@ export const translations = {
     stats: {
       kicker: 'Trayectoria e Impacto',
       title: 'ICAP en Cifras',
-      badge: 'Cifras oficiales · Resumen Estratégico ICAP',
+      badge: 'Proyectos con evidencia · Base de proyectos ICAP',
       items: {
         proyectos: { label: 'Proyectos', sublabel: 'ejecutados' },
         clientes: { label: 'Clientes', sublabel: 'institucionales' },
@@ -127,9 +127,7 @@ export const translations = {
       bookKicker: 'Área de especialización',
       bookHeader: 'Asistencia técnica · ICAP',
       institute: ['Instituto Centroamericano', 'de Administración Pública'],
-      plaqueTitle: 'Asistencia técnica',
-      plaqueCount: (n) => `${n} áreas`,
-      plaqueAria: 'Resaltar los libros de las áreas',
+      fillerAria: 'Mostrar dónde está cada área',
       pagePrev: 'Área anterior',
       pageNext: 'Área siguiente'
     },
@@ -302,72 +300,72 @@ export const translations = {
           status: 'Sede y Enlace País',
           city: 'Ciudad de Guatemala',
           description:
-            'Oficina nacional de vinculación con ministerios, fortalecimiento institucional y acompañamiento a proyectos de modernización estatal.',
-          highlight: 'Programas de Alta Dirección y Enlace Gubernamental'
+            'Asistencia técnica con la Cancillería y la Academia de Diplomacia, la CRIE (gobierno corporativo del sector eléctrico regional), OSPESCA (pesca responsable) y el BID (blindaje climático de la infraestructura).',
+          highlight: 'Diplomacia, gobierno corporativo y resiliencia climática'
         },
         PA: {
           name: 'Panamá',
           status: 'Centro Regional',
           city: 'Ciudad de Panamá',
           description:
-            'Centro regional de capacitación técnica, formación ejecutiva y vinculación estratégica con organismos multilaterales de desarrollo.',
-          highlight: 'Hub Regional de Capacitación y Cooperación'
+            'Metodología participativa de política pública para el fomento de la industria nacional con el Ministerio de Economía y Finanzas, además de programas regionales del BID (blindaje climático) y del SICA (prevención de la violencia contra las mujeres).',
+          highlight: 'Política industrial y resiliencia climática'
         },
         BZ: {
           name: 'Belice',
           status: 'Estado Miembro SICA',
           city: 'Belmopán',
           description:
-            'Programas de cooperación técnica bilingüe, gestión ambiental, resiliencia climática y formación de cuadros públicos.',
-          highlight: 'Cooperación Técnica e Integración Regional'
+            'Participa en programas regionales: concientización sobre pesca responsable con OSPESCA y el diplomado del SICA en prevención de la violencia contra las mujeres y la trata de personas.',
+          highlight: 'Pesca responsable y prevención de la violencia'
         },
         SV: {
           name: 'El Salvador',
           status: 'Estado Miembro SICA',
           city: 'San Salvador',
           description:
-            'Acompañamiento en transformación digital del gobierno, innovación ciudadana y optimización de proyectos de inversión estatal.',
-          highlight: 'Transformación Digital y Servicios Ciudadanos'
+            'Participa en las dos fases del mecanismo regional del BID para la gestión integral del riesgo y el blindaje climático de la infraestructura.',
+          highlight: 'Gestión del riesgo y blindaje climático'
         },
         HN: {
           name: 'Honduras',
           status: 'Estado Miembro SICA',
           city: 'Tegucigalpa',
           description:
-            'Fortalecimiento de la gestión en salud pública, programas de posgrado y modernización de la administración territorial.',
-          highlight: 'Gerencia en Salud y Políticas Públicas'
+            'Participa en la primera fase del mecanismo regional del BID para la gestión integral del riesgo y el blindaje climático de la infraestructura.',
+          highlight: 'Gestión del riesgo y blindaje climático'
         },
         NI: {
           name: 'Nicaragua',
           status: 'Estado Miembro SICA',
           city: 'Managua',
           description:
-            'Capacitación en planificación estratégica, gestión por resultados y fortalecimiento de las capacidades del servidor público.',
-          highlight: 'Formación y Planificación Estratégica'
+            'Estado miembro del SICA. Ningún proyecto con evidencia lo nombra de forma específica; los proyectos de alcance centroamericano no se atribuyen a países en particular.',
+          highlight: 'Estado miembro del SICA'
         },
         DO: {
           name: 'Rep. Dominicana',
           status: 'Estado Miembro SICA',
           city: 'Santo Domingo',
           description:
-            'Convenios de formación académica superior, compras públicas sostenibles y vinculación caribeña-centroamericana.',
-          highlight: 'Alianzas de Posgrado y Contratación Pública'
+            'Especialización en evaluación de necesidades post-desastre (PDNA) con el PNUD, prioridades de adaptación climática con el Programa Estado de la Nación y programas del SICA en seguridad, justicia y prevención de la violencia.',
+          highlight: 'Recuperación post-desastre y adaptación climática'
         },
         MX: {
           name: 'México',
           status: 'Cooperación Regional',
           city: 'Ciudad de México',
           description:
-            'Convenios de investigación aplicada, intercambio de expertos con instituciones académicas y proyectos mesoamericanos.',
-          highlight: 'Alianzas Académicas Mesoamericanas'
+            'Fortalecimiento de capacidades en compras públicas sostenibles y ecoetiquetado con la GIZ, junto a Brasil, Colombia, Costa Rica y Ecuador.',
+          highlight: 'Compras públicas sostenibles'
         },
         CO: {
           name: 'Colombia',
           status: 'Cooperación Regional',
           city: 'Bogotá',
           description:
-            'Cooperación Sur-Sur en innovación pública, gestión de la seguridad social y transferencia de buenas prácticas.',
-          highlight: 'Innovación Pública y Cooperación Sur-Sur'
+            'Fortalecimiento de capacidades en compras públicas sostenibles y ecoetiquetado con la GIZ, junto a México, Brasil, Costa Rica y Ecuador.',
+          highlight: 'Compras públicas sostenibles'
         }
       }
     },
@@ -580,19 +578,27 @@ export const translations = {
       title: 'Organismos y Socios de Cooperación',
       subtitle: 'Tocá una institución para ver los proyectos que ha trabajado en conjunto con el ICAP.',
       modalSubtitle: 'Organismo Aliado',
-      noProjectRecord: 'Este organismo no figura como cliente en la clasificación de proyectos de Asistencia Técnica.',
+      noProjectRecord: 'Este organismo no figura como cliente en la base de proyectos con evidencia.',
       relatedProjects: 'Proyectos con el ICAP',
       projectAreasLabel: 'Áreas de especialización',
       seeAll: (n) => (n === 1 ? 'Ver el proyecto' : `Ver los ${n} proyectos`),
       items: {
         sica: { name: 'SICA', label: 'Sistema de la Integración Centroamericana' },
-        'ops-oms': { name: 'OPS / OMS', label: 'Organización Panamericana de la Salud' },
+        ospesca: { name: 'OSPESCA', label: 'Organización del Sector Pesquero y Acuícola del Istmo Centroamericano' },
+        cenpromype: { name: 'CENPROMYPE', label: 'Centro Regional de Promoción de la MIPYME' },
+        crie: { name: 'CRIE', label: 'Comisión Regional de Interconexión Eléctrica' },
         bid: { name: 'BID', label: 'Banco Interamericano de Desarrollo' },
+        giz: { name: 'GIZ', label: 'Agencia Alemana de Cooperación Internacional' },
+        'banco-mundial': { name: 'Banco Mundial', label: 'Grupo Banco Mundial' },
+        pnud: { name: 'PNUD', label: 'Programa de las Naciones Unidas para el Desarrollo' },
+        unesco: { name: 'UNESCO', label: 'Organización de las Naciones Unidas para la Educación, la Ciencia y la Cultura' },
+        unicef: { name: 'UNICEF', label: 'Fondo de las Naciones Unidas para la Infancia' },
+        oit: { name: 'OIT', label: 'Organización Internacional del Trabajo' },
+        iica: { name: 'IICA', label: 'Instituto Interamericano de Cooperación para la Agricultura' },
+        uicn: { name: 'UICN', label: 'Unión Internacional para la Conservación de la Naturaleza' },
+        oim: { name: 'OIM', label: 'Organización Internacional para las Migraciones' },
         flacso: { name: 'FLACSO', label: 'Facultad Latinoamericana de Ciencias Sociales' },
-        bcie: { name: 'BCIE', label: 'Banco Centroamericano de Integración Económica' },
-        cepal: { name: 'CEPAL', label: 'Comisión Económica para América Latina' },
-        aecid: { name: 'AECID', label: 'Agencia Española de Cooperación' },
-        oea: { name: 'OEA', label: 'Organización de los Estados Americanos' }
+        aecid: { name: 'AECID', label: 'Agencia Española de Cooperación' }
       }
     },
 
@@ -611,20 +617,15 @@ export const translations = {
       whatsapp: 'WhatsApp Institucional',
       email: 'Correo Institucional',
       linkedin: 'ICAP en LinkedIn',
-      schedule: 'Agendar una Reunión',
       saveHint: 'Descargá la tarjeta institucional del ICAP (.vcf) directo a tus contactos.',
       footerLine: 'ICAP · San José, Costa Rica · SICA',
       whatsappMessage: (topic) =>
         `Hola ICAP, los contacto desde el brochure institucional. Me interesa información sobre ${topic}.`,
-      emailSubject: (topic) => `Consulta institucional · ${topic}`,
-      scheduleModalTitle: 'Agendar Reunión',
-      scheduleModalSubtitle: 'Coordinación Institucional',
-      scheduleModalText:
-        'Elegí el canal que prefieras para coordinar una sesión presencial o virtual con el equipo del ICAP.',
-      viaWhatsapp: 'Coordinar vía WhatsApp',
-      viaEmail: 'Solicitar por Correo Electrónico',
-      scheduleWhatsappMessage: (topic) => `Hola ICAP, me gustaría agendar una reunión sobre ${topic}.`,
-      scheduleEmailSubject: (topic) => `Solicitud de reunión · ${topic}`
+      emailModalSubtitle: (topic) => `Consultas sobre ${topic}`,
+      emailModalText: 'Copiá el correo y escribinos desde tu aplicación de correo preferida.',
+      copyEmail: 'Copiar correo',
+      copied: '¡Copiado!',
+      copyFailed: 'No se pudo copiar: seleccioná el correo y copialo a mano.'
     },
 
     aboutModal: {
@@ -771,7 +772,7 @@ export const translations = {
     stats: {
       kicker: 'Track Record & Impact',
       title: 'ICAP by the Numbers',
-      badge: 'Official figures · ICAP Strategic Summary',
+      badge: 'Evidence-backed projects · ICAP project base',
       items: {
         proyectos: { label: 'Projects', sublabel: 'completed' },
         clientes: { label: 'Clients', sublabel: 'institutional' },
@@ -789,9 +790,7 @@ export const translations = {
       bookKicker: 'Area of specialization',
       bookHeader: 'Technical assistance · ICAP',
       institute: ['Central American Institute', 'of Public Administration'],
-      plaqueTitle: 'Technical assistance',
-      plaqueCount: (n) => `${n} areas`,
-      plaqueAria: 'Highlight the area books',
+      fillerAria: 'Show where each area is',
       pagePrev: 'Previous area',
       pageNext: 'Next area'
     },
@@ -962,72 +961,72 @@ export const translations = {
           status: 'Country Office & Liaison',
           city: 'Guatemala City',
           description:
-            'National liaison office with ministries, institutional strengthening, and support for state modernization projects.',
-          highlight: 'Executive Leadership Programs and Government Liaison'
+            'Technical assistance with the Ministry of Foreign Affairs and its Diplomatic Academy, CRIE (corporate governance in the regional power sector), OSPESCA (responsible fishing) and the IDB (climate-proofing infrastructure).',
+          highlight: 'Diplomacy, corporate governance and climate resilience'
         },
         PA: {
           name: 'Panama',
           status: 'Regional Center',
           city: 'Panama City',
           description:
-            'Regional center for technical training, executive education, and strategic engagement with multilateral development organizations.',
-          highlight: 'Regional Training and Cooperation Hub'
+            'A participatory public-policy methodology to promote national industry with the Ministry of Economy and Finance, plus regional programs with the IDB (climate-proofing) and SICA (preventing violence against women).',
+          highlight: 'Industrial policy and climate resilience'
         },
         BZ: {
           name: 'Belize',
           status: 'SICA Member State',
           city: 'Belmopan',
           description:
-            'Bilingual technical cooperation programs, environmental management, climate resilience, and training for public-sector personnel.',
-          highlight: 'Technical Cooperation and Regional Integration'
+            'Takes part in regional programs: responsible-fishing awareness with OSPESCA and the SICA diploma course on preventing violence against women and human trafficking.',
+          highlight: 'Responsible fishing and violence prevention'
         },
         SV: {
           name: 'El Salvador',
           status: 'SICA Member State',
           city: 'San Salvador',
           description:
-            'Support for digital government transformation, citizen innovation, and optimization of state investment projects.',
-          highlight: 'Digital Transformation and Citizen Services'
+            'Takes part in both phases of the IDB\'s regional mechanism for comprehensive risk management and climate-proofing of infrastructure.',
+          highlight: 'Risk management and climate-proofing'
         },
         HN: {
           name: 'Honduras',
           status: 'SICA Member State',
           city: 'Tegucigalpa',
           description:
-            'Strengthening public health management, graduate programs, and modernization of territorial administration.',
-          highlight: 'Health Management and Public Policy'
+            'Took part in the first phase of the IDB\'s regional mechanism for comprehensive risk management and climate-proofing of infrastructure.',
+          highlight: 'Risk management and climate-proofing'
         },
         NI: {
           name: 'Nicaragua',
           status: 'SICA Member State',
           city: 'Managua',
           description:
-            'Training in strategic planning, results-based management, and strengthening the capacities of public servants.',
-          highlight: 'Training and Strategic Planning'
+            'SICA member state. No evidence-backed project names it specifically; projects covering Central America as a whole are not attributed to individual countries.',
+          highlight: 'SICA member state'
         },
         DO: {
           name: 'Dominican Rep.',
           status: 'SICA Member State',
           city: 'Santo Domingo',
           description:
-            'Higher academic training agreements, sustainable public procurement, and Caribbean–Central American engagement.',
-          highlight: 'Graduate Partnerships and Public Procurement'
+            'Specialization in Post-Disaster Needs Assessment (PDNA) with UNDP, climate adaptation priorities with the State of the Nation Program, and SICA programs on security, justice and violence prevention.',
+          highlight: 'Post-disaster recovery and climate adaptation'
         },
         MX: {
           name: 'Mexico',
           status: 'Regional Cooperation',
           city: 'Mexico City',
           description:
-            'Applied research agreements, expert exchanges with academic institutions, and Mesoamerican projects.',
-          highlight: 'Mesoamerican Academic Partnerships'
+            'Capacity building in sustainable public procurement and eco-labeling with GIZ, together with Brazil, Colombia, Costa Rica and Ecuador.',
+          highlight: 'Sustainable public procurement'
         },
         CO: {
           name: 'Colombia',
           status: 'Regional Cooperation',
           city: 'Bogotá',
           description:
-            'South-South cooperation in public innovation, social security management, and the transfer of best practices.',
-          highlight: 'Public Innovation and South-South Cooperation'
+            'Capacity building in sustainable public procurement and eco-labeling with GIZ, together with Mexico, Brazil, Costa Rica and Ecuador.',
+          highlight: 'Sustainable public procurement'
         }
       }
     },
@@ -1238,19 +1237,27 @@ export const translations = {
       title: 'Partner Organizations & Cooperation Agencies',
       subtitle: 'Tap an institution to see the projects it has carried out together with ICAP.',
       modalSubtitle: 'Partner Organization',
-      noProjectRecord: 'This organization does not appear as a client in the Technical Assistance project classification.',
+      noProjectRecord: 'This organization does not appear as a client in the evidence-backed project base.',
       relatedProjects: 'Projects with ICAP',
       projectAreasLabel: 'Areas of specialization',
       seeAll: (n) => (n === 1 ? 'See the project' : `See all ${n} projects`),
       items: {
         sica: { name: 'SICA', label: 'Central American Integration System' },
-        'ops-oms': { name: 'PAHO / WHO', label: 'Pan American Health Organization' },
+        ospesca: { name: 'OSPESCA', label: 'Central American Fisheries and Aquaculture Organization' },
+        cenpromype: { name: 'CENPROMYPE', label: 'Regional Center for the Promotion of MSMEs' },
+        crie: { name: 'CRIE', label: 'Regional Electric Interconnection Commission' },
         bid: { name: 'IDB', label: 'Inter-American Development Bank' },
+        giz: { name: 'GIZ', label: 'German Agency for International Cooperation' },
+        'banco-mundial': { name: 'World Bank', label: 'World Bank Group' },
+        pnud: { name: 'UNDP', label: 'United Nations Development Programme' },
+        unesco: { name: 'UNESCO', label: 'United Nations Educational, Scientific and Cultural Organization' },
+        unicef: { name: 'UNICEF', label: "United Nations Children's Fund" },
+        oit: { name: 'ILO', label: 'International Labour Organization' },
+        iica: { name: 'IICA', label: 'Inter-American Institute for Cooperation on Agriculture' },
+        uicn: { name: 'IUCN', label: 'International Union for Conservation of Nature' },
+        oim: { name: 'IOM', label: 'International Organization for Migration' },
         flacso: { name: 'FLACSO', label: 'Latin American Faculty of Social Sciences' },
-        bcie: { name: 'CABEI', label: 'Central American Bank for Economic Integration' },
-        cepal: { name: 'ECLAC', label: 'Economic Commission for Latin America' },
-        aecid: { name: 'AECID', label: 'Spanish Agency for International Development Cooperation' },
-        oea: { name: 'OAS', label: 'Organization of American States' }
+        aecid: { name: 'AECID', label: 'Spanish Agency for International Development Cooperation' }
       }
     },
 
@@ -1269,20 +1276,15 @@ export const translations = {
       whatsapp: 'Institutional WhatsApp',
       email: 'Institutional Email',
       linkedin: 'ICAP on LinkedIn',
-      schedule: 'Schedule a Meeting',
       saveHint: "Download ICAP's institutional card (.vcf) straight to your contacts.",
       footerLine: 'ICAP · San José, Costa Rica · SICA',
       whatsappMessage: (topic) =>
         `Hi ICAP, I'm reaching out from the institutional brochure. I'd like information about ${topic}.`,
-      emailSubject: (topic) => `Institutional inquiry · ${topic}`,
-      scheduleModalTitle: 'Schedule a Meeting',
-      scheduleModalSubtitle: 'Institutional Coordination',
-      scheduleModalText:
-        'Choose the channel you prefer to coordinate an in-person or virtual session with the ICAP team.',
-      viaWhatsapp: 'Coordinate via WhatsApp',
-      viaEmail: 'Request by Email',
-      scheduleWhatsappMessage: (topic) => `Hi ICAP, I'd like to schedule a meeting about ${topic}.`,
-      scheduleEmailSubject: (topic) => `Meeting request · ${topic}`
+      emailModalSubtitle: (topic) => `Inquiries about ${topic}`,
+      emailModalText: 'Copy the address and write to us from your favorite email app.',
+      copyEmail: 'Copy email',
+      copied: 'Copied!',
+      copyFailed: "Couldn't copy: select the address and copy it by hand."
     },
 
     aboutModal: {

@@ -3,75 +3,27 @@ import { Info, X, ArrowRight, ChevronRight } from 'lucide-react';
 import BottomSheet from '../components/BottomSheet';
 import KickerBadge from '../components/KickerBadge';
 import { getEtiqueta, nombreEtiqueta } from '../data/etiquetas';
-import { proyectosDeSocio, tituloDe } from '../data/proyectosData';
+import { SOCIOS, proyectosDeSocio, tituloDe } from '../data/proyectosData';
 import { useLanguage } from '../i18n/LanguageContext';
 import sicaLogo from '../assets/allies/sica.png';
-import opsOmsLogo from '../assets/allies/ops-oms.png';
 import bidLogo from '../assets/allies/bid.png';
 import flacsoLogo from '../assets/allies/flacso.png';
-import bcieLogo from '../assets/allies/bcie.png';
-import cepalLogo from '../assets/allies/cepal.png';
 import aecidLogo from '../assets/allies/aecid.png';
-import oeaLogo from '../assets/allies/oea.png';
 
 /**
- * Organismos aliados del ICAP, con su logo (src/assets/allies/*.png). Si
- * falta un logo, `logo: null` muestra las siglas en su lugar.
+ * Organismos aliados del ICAP: los organismos internacionales y del SICA
+ * que figuran como clientes en la base de proyectos con evidencia
+ * (SOCIOS / proyectosDeSocio() en proyectosData.js). Nombre y descripción
+ * salen de translations.js (allies.items). Los que tienen logo en
+ * src/assets/allies lo muestran; los demás, sus siglas.
  *
- * Los proyectos de cada socio salen de proyectosDeSocio()
- * (proyectosData.js), que busca al organismo dentro del cliente de cada
- * proyecto. Si un socio no figura en ningún proyecto, la ficha lo dice.
+ * Van ordenados por cantidad de proyectos, con el SICA siempre primero.
  */
-const ALLIES = [
-  {
-    id: 'sica',
-    name: 'SICA',
-    label: 'Sistema de la Integración Centroamericana',
-    logo: sicaLogo
-  },
-  {
-    id: 'ops-oms',
-    name: 'OPS / OMS',
-    label: 'Organización Panamericana de la Salud',
-    logo: opsOmsLogo
-  },
-  {
-    id: 'bid',
-    name: 'BID',
-    label: 'Banco Interamericano de Desarrollo',
-    logo: bidLogo
-  },
-  {
-    id: 'flacso',
-    name: 'FLACSO',
-    label: 'Facultad Latinoamericana de Ciencias Sociales',
-    logo: flacsoLogo
-  },
-  {
-    id: 'bcie',
-    name: 'BCIE',
-    label: 'Banco Centroamericano de Integración Económica',
-    logo: bcieLogo
-  },
-  {
-    id: 'cepal',
-    name: 'CEPAL',
-    label: 'Comisión Económica para América Latina',
-    logo: cepalLogo
-  },
-  {
-    id: 'aecid',
-    name: 'AECID',
-    label: 'Agencia Española de Cooperación',
-    logo: aecidLogo
-  },
-  {
-    id: 'oea',
-    name: 'OEA',
-    label: 'Organización de los Estados Americanos',
-    logo: oeaLogo
-  }
-];
+const LOGOS = { sica: sicaLogo, bid: bidLogo, flacso: flacsoLogo, aecid: aecidLogo };
+
+const ALLIES = SOCIOS.map((id) => ({ id, logo: LOGOS[id] || null, n: proyectosDeSocio(id).length }))
+  .filter((a) => a.n > 0)
+  .sort((a, b) => (a.id === 'sica' ? -1 : b.id === 'sica' ? 1 : b.n - a.n));
 
 function AllyIconBadge({ ally, size = 'w-8 h-8', textSize = 'text-xs' }) {
   if (ally.logo) {
@@ -81,9 +33,16 @@ function AllyIconBadge({ ally, size = 'w-8 h-8', textSize = 'text-xs' }) {
       </div>
     );
   }
+  // Sin logo: las siglas en navy sobre blanco, como si fuera el logo. Las
+  // siglas largas (CENPROMYPE) van más chicas para que quepan.
+  const sigla = ally.name.split(' ')[0];
   return (
-    <div className={`${size} rounded-lg bg-[#003366] text-[#0077C8] flex items-center justify-center font-heading font-extrabold ${textSize} shrink-0`}>
-      {ally.name.split(' ')[0]}
+    <div
+      className={`${size} rounded-lg bg-white text-[#003366] flex items-center justify-center font-heading font-extrabold tracking-tight leading-none shrink-0 ${
+        sigla.length > 5 ? 'text-[0.45rem]' : textSize
+      }`}
+    >
+      {sigla}
     </div>
   );
 }

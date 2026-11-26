@@ -21,6 +21,8 @@
  * - paises:  SÓLO los países del mapa de Presencia que la hoja nombra con
  *            su nombre (columna "País (base)"). Nunca se reparte un
  *            proyecto entre países que no sabemos si fueron atendidos.
+ * - otrosPaises: (opcional) países nombrados que no están en el mapa
+ *            (códigos ISO). Sólo cuentan para "Países atendidos".
  * - centroamerica: true cuando la zona atendida es Centroamérica (o la
  *            Región SICA) en general, sin decir qué países. Esos proyectos
  *            tienen su propio filtro en Proyectos y no se cuentan en
@@ -114,6 +116,7 @@ export const PROYECTOS_AT = [
     etiquetas: ['ambiente', 'economia', 'cooperacion'],
     tipoCliente: 'internacional',
     paises: ['MX', 'CO', 'CR'],
+    otrosPaises: ['BR', 'EC'],
     centroamerica: false,
     lugar: { es: 'México, Brasil, Colombia, Costa Rica y Ecuador', en: 'Mexico, Brazil, Colombia, Costa Rica and Ecuador' },
     desde: '2024-04',
@@ -1248,6 +1251,22 @@ export const tituloDe = (p, lang) => (lang === 'en' && p.tituloEn) || p.titulo;
 export const clienteDe = (p, lang) => (lang === 'en' && p.clienteEn) || p.cliente;
 export const lugarDe = (p, lang) => p.lugar[lang === 'en' ? 'en' : 'es'];
 
+// Cifras de "ICAP en Cifras" y de Proyectos, calculadas de la base para
+// que coincidan: clientes distintos y países nombrados en algún proyecto
+// (la zona "Centroamérica" en general no suma países).
+//
+// Algunas instituciones figuran con más de un nombre en la hoja; para
+// contarlas una sola vez se agrupan acá.
+const MISMA_INSTITUCION = [
+  [/\(BID\)/, 'BID'],
+  [/Ministerio de Educación Pública \(MEP\)/, 'MEP'],
+  [/^(Ministerio de Salud \(MINSA\)|Dirección de Planificación, Ministerio de Salud)$/, 'MINSA'],
+  [/\bSICA\)$/, 'SICA']
+];
+const institucion = (p) => MISMA_INSTITUCION.find(([patron]) => patron.test(p.cliente))?.[1] || p.cliente;
+export const totalClientes = new Set(PROYECTOS_AT.map(institucion)).size;
+export const paisesAtendidos = new Set(PROYECTOS_AT.flatMap((p) => [...p.paises, ...(p.otrosPaises || [])])).size;
+
 // Proyectos que nombran a un país del mapa (códigos de RegionalMap.jsx).
 // Los de "Centroamérica" en general no entran en ningún país.
 export const proyectosDePais = (codigo) => PROYECTOS_AT.filter((p) => p.paises.includes(codigo));
@@ -1260,15 +1279,29 @@ export const proyectosCentroamerica = () => PROYECTOS_AT.filter((p) => p.centroa
 export const esRegional = (p) => p.paises.length > 1 || p.centroamerica;
 
 // Socios del carrusel "Organismos y Socios" (ids de AlliesMarquee.jsx) y
-// cómo aparecen dentro del campo `cliente` de los proyectos.
+// cómo aparecen dentro del campo `cliente` de los proyectos. Son los
+// organismos internacionales y del SICA que figuran como clientes en la
+// base de proyectos con evidencia.
 const SOCIO_PATRON = {
   sica: /\bSICA\b/,
-  'ops-oms': /\(OPS\)/,
+  ospesca: /OSPESCA/,
+  cenpromype: /CENPROMYPE/,
+  crie: /\(CRIE\)/,
   bid: /\(BID\)/,
+  giz: /\(GIZ\)/,
+  'banco-mundial': /Banco Mundial/,
+  pnud: /Naciones Unidas para el Desarrollo/,
+  unesco: /UNESCO/,
+  unicef: /UNICEF/,
+  oit: /\(OIT\)/,
+  iica: /\(IICA\)/,
+  uicn: /UICN/,
+  oim: /Migraciones/,
   flacso: /FLACSO/,
-  bcie: /\bBCIE\b/,
   aecid: /Agencia Española de Cooperación|AECID/
 };
+
+export const SOCIOS = Object.keys(SOCIO_PATRON);
 
 export const proyectosDeSocio = (socio) => {
   const patron = SOCIO_PATRON[socio];

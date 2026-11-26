@@ -13,10 +13,11 @@ import icapLogoMark from '../assets/icap-logo-mark.png';
  * - Un librero navy de 2 × 2 nichos con un libro por cada una de las 14
  *   etiquetas de etiquetas.js, repartidos entre libros de relleno con el
  *   isotipo del ICAP.
- * - Al pasar el mouse cada libro da un saltito completo; pasar rápido por
- *   varios deja una estela (ver saltar). La placa del ICAP, al pie del
- *   librero, apaga los de relleno y hace saltar las 14 áreas una tras
- *   otra, para que se vea dónde está cada una.
+ * - Al pasar el mouse cada libro de área da un saltito completo; pasar
+ *   rápido por varios deja una estela (ver saltar). Los de relleno no
+ *   saltan: con el mouse encima su isotipo brilla un poco y, al tocarlos,
+ *   se apagan y hacen saltar las 14 áreas una tras otra, para que se vea
+ *   dónde está cada una (ver resaltar).
  * - El área elegida queda un poco afuera del estante y se lee en un libro
  *   abierto de papel: a la izquierda la portadilla, a la derecha la
  *   descripción y sus proyectos más recientes (todas las áreas tienen al
@@ -42,7 +43,7 @@ const DEFAULT_AREA_INDEX = Math.max(0, AREAS.findIndex((a) => a.id === DEFAULT_A
 
 const AUTO_MS = 7000;
 const SALTO_MS = 750; // igual que la animación bibSalto
-const PASO_MS = 90; // entre un libro y el siguiente al tocar la placa
+const PASO_MS = 90; // entre un libro y el siguiente al tocar uno de relleno
 
 // Los cuatro nichos: hacia qué lado se acomodan sus libros y cuáles
 // lleva (índice del área o 'r' para uno de relleno).
@@ -143,8 +144,8 @@ export default function SpecializationAreas({ onNavigate }) {
     setTimeout(() => el.classList.remove('bib-saltando'), demora + SALTO_MS);
   };
 
-  // La placa: los de relleno se apagan y las áreas saltan una por una, en
-  // orden, para que se vea dónde está cada una.
+  // Al tocar un libro de relleno: los de relleno se apagan y las áreas
+  // saltan una por una, en orden, para que se vea dónde está cada una.
   const libreroRef = useRef(null);
   const resaltarRef = useRef(null);
   const resaltar = () => {
@@ -247,16 +248,19 @@ export default function SpecializationAreas({ onNavigate }) {
           <div className="w-full max-w-[560px] mx-auto lg:max-w-none">
             <div ref={libreroRef} className="bib-librero">
               {NICHOS.map((nicho, n) => (
-                <div key={n} className={`bib-nicho ${nicho.lado}`}>
+                <div key={n} className={`bib-nicho ${nicho.lado} ${nicho.cosas.length > 4 ? 'lleno' : ''}`}>
                   {nicho.cosas.map((cosa) => {
                     if (cosa === 'r') {
                       const k = rellenos++;
                       const color = RELLENO[k % RELLENO.length];
                       const claro = tintaSobre(color) !== '#fff';
                       return (
-                        <span
+                        <button
                           key={`r${k}`}
-                          aria-hidden="true"
+                          type="button"
+                          aria-label={tA.fillerAria}
+                          title={tA.fillerAria}
+                          onClick={resaltar}
                           className={`bib-relleno ${claro ? 'claro' : ''}`}
                           style={{
                             '--c': color,
@@ -270,7 +274,7 @@ export default function SpecializationAreas({ onNavigate }) {
                             <img src={icapLogoMark} alt="" draggable={false} />
                             <span className="bib-lomo-banda" />
                           </span>
-                        </span>
+                        </button>
                       );
                     }
                     const a = AREAS[cosa];
@@ -304,13 +308,6 @@ export default function SpecializationAreas({ onNavigate }) {
                   })}
                 </div>
               ))}
-            </div>
-            <div className="flex justify-center mt-7">
-              <button type="button" className="bib-placa" onClick={resaltar} aria-label={tA.plaqueAria}>
-                <img src={icapLogoMark} alt="" draggable={false} />
-                <span>{tA.plaqueTitle}</span>
-                <small>{tA.plaqueCount(AREAS.length)}</small>
-              </button>
             </div>
           </div>
 

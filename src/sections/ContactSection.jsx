@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import {
   MessageCircle,
   Mail,
-  Calendar,
+  Copy,
+  Check,
   ExternalLink,
   BadgeCheck,
   MapPin,
@@ -36,11 +37,51 @@ const MAPS_URL =
 // ICAP sepa a qué departamento derivar.
 export default function ContactSection({ contact = defaultContact, id = 'contacto', dept = 'at' }) {
   const { t } = useLanguage();
-  const [scheduleModal, setScheduleModal] = useState(false);
+  const [emailModal, setEmailModal] = useState(false);
   const topic = dept === 'docencia' ? t.header.deptDocencia : t.header.deptAT;
   const DeptIcon = dept === 'docencia' ? GraduationCap : Handshake;
-  // En AT, correo, agendar y la tarjeta .vcf van a Asistencia Técnica.
+  // En AT, el correo y la tarjeta .vcf van a Asistencia Técnica.
   const email = dept === 'at' && contact.emailAT ? contact.emailAT : contact.email;
+
+  // El botón de correo no abre Outlook (mailto): abre una ventanita con el
+  // correo a la vista y un botón para copiarlo. `copia` es el estado del
+  // botón: null, 'ok' (vuelve solo a null) o 'error'.
+  const [copia, setCopia] = useState(null);
+  const copiaTimeoutRef = useRef(null);
+  useEffect(() => () => clearTimeout(copiaTimeoutRef.current), []);
+  const abrirCorreo = () => {
+    setCopia(null);
+    setEmailModal(true);
+  };
+  // Se copia desde el documento del botón (en "Vista Móvil" es el iframe,
+  // no la ventana de afuera). Si el portapapeles moderno no está o falla
+  // (sin https, permisos), se intenta con un textarea + execCommand.
+  const copiarCorreo = async (e) => {
+    clearTimeout(copiaTimeoutRef.current);
+    const doc = e.currentTarget.ownerDocument;
+    const view = doc.defaultView;
+    let ok;
+    try {
+      await view.navigator.clipboard.writeText(email);
+      ok = true;
+    } catch {
+      const area = doc.createElement('textarea');
+      area.value = email;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      doc.body.appendChild(area);
+      area.select();
+      try {
+        ok = doc.execCommand('copy');
+      } catch {
+        ok = false;
+      }
+      doc.body.removeChild(area);
+    }
+    setCopia(ok ? 'ok' : 'error');
+    if (ok) copiaTimeoutRef.current = setTimeout(() => setCopia(null), 2200);
+  };
 
   // Tarjeta .vcf de la institución (no de una persona): mismos teléfono,
   // correo, sitio y dirección del contacto, con el ICAP como nombre.
@@ -213,7 +254,7 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
               </div>
 
               {/* Quick Action Buttons */}
-              <div className="flex flex-col gap-2.5 md:grid md:grid-cols-2">
+              <div className="flex flex-col gap-2.5">
                 {/* WhatsApp */}
                 <a
                   href={`https://wa.me/${whatsappDigits(contact.cellPhone)}?text=${encodeURIComponent(t.contact.whatsappMessage(topic))}`}
@@ -230,9 +271,10 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                   <ExternalLink className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 ml-2" />
                 </a>
 
-                {/* Email */}
-                <a
-                  href={`mailto:${email}?subject=${encodeURIComponent(t.contact.emailSubject(topic))}`}
+                {/* Email: abre la ventanita para copiar el correo */}
+                <button
+                  type="button"
+                  onClick={abrirCorreo}
                   className="flex items-center justify-between h-13 px-4 rounded-2xl bg-[#EAF3FB] dark:bg-white/5 hover:bg-[#D5E9F8] dark:hover:bg-white/10 text-[#003366] dark:text-white font-heading font-bold text-xs tracking-wider uppercase border border-[#0077C8]/20 dark:border-white/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99] active:translate-y-0"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -241,8 +283,8 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                     </div>
                     <span className="truncate">{t.contact.email}</span>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-[#0077C8] dark:text-[#4FB2F2] shrink-0 ml-2" />
-                </a>
+                  <Copy className="w-4 h-4 text-[#0077C8] dark:text-[#4FB2F2] shrink-0 ml-2" />
+                </button>
 
                 {/* LinkedIn */}
                 <a
@@ -259,20 +301,6 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
                   </div>
                   <ExternalLink className="w-4 h-4 text-[#003366] dark:text-[#9FC6E8] shrink-0 ml-2" />
                 </a>
-
-                {/* Schedule Meeting */}
-                <button
-                  onClick={() => setScheduleModal(true)}
-                  className="flex items-center justify-between h-13 px-4 rounded-2xl bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-800 dark:text-slate-100 font-heading font-bold text-xs tracking-wider uppercase border border-slate-200 dark:border-white/10 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99] active:translate-y-0"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-slate-800 dark:bg-white/15 text-white flex items-center justify-center shrink-0">
-                      <Calendar className="w-4 h-4" />
-                    </div>
-                    <span className="truncate">{t.contact.schedule}</span>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0 ml-2" />
-                </button>
               </div>
 
               {/* Primary Action: Guardar Contacto (.vcf institucional) */}
@@ -306,41 +334,48 @@ export default function ContactSection({ contact = defaultContact, id = 'contact
         </div>
       </div>
 
-      {/* Schedule Meeting Bottom Sheet */}
+      {/* Ventanita del correo: el correo a la vista y un botón para copiarlo */}
       <BottomSheet
-        isOpen={scheduleModal}
-        onClose={() => setScheduleModal(false)}
-        title={t.contact.scheduleModalTitle}
-        subtitle={t.contact.scheduleModalSubtitle}
-        icon={<Calendar className="w-5 h-5 text-[#0077C8]" />}
+        isOpen={emailModal}
+        onClose={() => setEmailModal(false)}
+        title={t.contact.email}
+        subtitle={t.contact.emailModalSubtitle(topic)}
+        icon={<Mail className="w-5 h-5 text-[#0077C8]" />}
+        maxWidth="max-w-md"
       >
-        <div className="space-y-4 text-center sm:text-left">
-          <p className="text-xs sm:text-sm text-slate-900 dark:text-slate-100 leading-relaxed">
-            {t.contact.scheduleModalText}
-          </p>
+        <div className="space-y-4 text-center">
+          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">{t.contact.emailModalText}</p>
 
-          <div className="flex flex-col gap-2.5 pt-2">
-            <a
-              href={`https://wa.me/${whatsappDigits(contact.cellPhone)}?text=${encodeURIComponent(t.contact.scheduleWhatsappMessage(topic))}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors block text-center shadow-md"
-            >
-              {t.contact.viaWhatsapp}
-            </a>
-            <a
-              href={`mailto:${email}?subject=${encodeURIComponent(t.contact.scheduleEmailSubject(topic))}`}
-              className="py-3.5 px-4 rounded-2xl bg-[#0077C8] hover:bg-[#005A96] text-white font-heading font-bold text-xs uppercase tracking-wider transition-colors block text-center shadow-md"
-            >
-              {t.contact.viaEmail}
-            </a>
-            <button
-              onClick={() => setScheduleModal(false)}
-              className="py-3.5 px-4 rounded-2xl bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 font-heading font-bold text-xs uppercase tracking-wider transition-colors"
-            >
-              {t.common.close}
-            </button>
+          {/* El correo, grande y seleccionable, en una tarjeta con el degradado del perfil */}
+          <div
+            className="relative overflow-hidden rounded-2xl px-4 py-5 text-white shadow-lg"
+            style={{ background: PROFILE_BACKGROUND }}
+          >
+            <EscudoICAP
+              tono="white"
+              plano
+              className="pointer-events-none absolute w-28 -right-6 -bottom-8 opacity-[0.14] rotate-[9deg]"
+            />
+            <Mail className="relative w-6 h-6 mx-auto mb-2 text-[#bfe6ff]" />
+            <p className="relative font-heading font-extrabold text-base sm:text-lg tracking-wide break-all select-all">{email}</p>
           </div>
+
+          <button
+            type="button"
+            onClick={copiarCorreo}
+            className={`w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl font-heading font-bold text-xs uppercase tracking-wider text-white shadow-md transition-all duration-300 active:scale-[0.98] ${
+              copia === 'ok' ? 'bg-emerald-600' : 'bg-[#0077C8] hover:bg-[#005A96]'
+            }`}
+          >
+            {copia === 'ok' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            {copia === 'ok' ? t.contact.copied : t.contact.copyEmail}
+          </button>
+          {copia === 'error' && (
+            <p className="text-[0.6875rem] text-rose-600 dark:text-rose-300">{t.contact.copyFailed}</p>
+          )}
+          <span aria-live="polite" className="sr-only">
+            {copia === 'ok' ? t.contact.copied : ''}
+          </span>
         </div>
       </BottomSheet>
     </section>

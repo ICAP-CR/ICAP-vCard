@@ -689,74 +689,38 @@ h1, h2, h3, h4, h5, h6 {
   --tela: color-mix(in srgb, var(--c), #1C2430 12%);
   transition: opacity 0.5s, filter 0.5s;
 }
-/* Mientras la placa resalta las áreas, los de relleno se apagan */
+/* Mientras se resaltan las áreas, los de relleno se apagan */
 .bib-librero.resaltando .bib-relleno .bib-lomo {
   opacity: 0.35;
   filter: saturate(0.3);
 }
 
-/* Placa del ICAP al pie del librero: al tocarla, las áreas saltan una
-   tras otra (como la del nicho central en la página web). */
-.bib-placa {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 0.8rem 1.4rem 0.65rem;
-  border: 0;
-  text-align: center;
-  border-radius: 3px;
-  background: var(--papel);
+/* Los de relleno son botones: con el mouse encima no saltan, sólo el
+   isotipo brilla un poco para llamar la atención; al tocarlos hacen
+   saltar las áreas (ver resaltar en SpecializationAreas.jsx). */
+.bib-relleno {
   cursor: pointer;
-  box-shadow:
-    0 0 0 1px rgba(0, 51, 102, 0.12),
-    0 0 0 5px #fff,
-    0 0 0 6px rgba(0, 51, 102, 0.15),
-    0 16px 22px -14px rgba(0, 31, 61, 0.6);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
 }
-.bib-placa:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 0 0 1px rgba(0, 51, 102, 0.12),
-    0 0 0 5px #fff,
-    0 0 0 6px #0077C8,
-    0 22px 26px -14px rgba(0, 31, 61, 0.6);
+.bib-relleno:focus {
+  outline: none;
 }
-.bib-placa:active {
-  transform: scale(0.97);
-}
-.bib-placa:focus-visible {
+.bib-relleno:focus-visible .bib-lomo {
   outline: 2px solid #4FB2F2;
-  outline-offset: 8px;
+  outline-offset: 2px;
 }
-.bib-librero.resaltando + div .bib-placa {
-  animation: bibPlacaLate 0.9s ease;
+.bib-relleno img {
+  transition: opacity 0.4s, filter 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
-@keyframes bibPlacaLate {
-  40% {
-    box-shadow:
-      0 0 0 1px rgba(0, 51, 102, 0.12),
-      0 0 0 5px #fff,
-      0 0 0 9px #4FB2F2,
-      0 0 34px 6px rgba(79, 178, 242, 0.6);
-  }
+.bib-relleno:hover img,
+.bib-relleno:focus-visible img {
+  opacity: 1;
+  transform: scale(1.2);
+  filter: brightness(0) invert(1) drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 6px rgba(191, 230, 255, 0.95)) drop-shadow(0 0 12px rgba(79, 178, 242, 0.9));
 }
-.bib-placa img {
-  width: 30px;
-}
-.bib-placa span {
-  font-family: var(--serif);
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: #003366;
-}
-.bib-placa small {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--gris-libro);
+.bib-relleno.claro:hover img,
+.bib-relleno.claro:focus-visible img {
+  opacity: 1;
+  filter: drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 12px rgba(0, 119, 200, 0.8));
 }
 .bib-relleno img {
   width: min(16px, 60%);
@@ -1107,7 +1071,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.66rem;
     letter-spacing: 0;
   }
-  .bib-relleno {
+  .bib-nicho.lleno .bib-relleno {
     display: none;
   }
   .bib-cara-der {
@@ -1137,8 +1101,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: none;
   }
   .bib-saltando .bib-lomo,
-  .bib-aparece > *,
-  .bib-librero.resaltando + div .bib-placa {
+  .bib-aparece > * {
     animation: none;
   }
   .bib-hoja,

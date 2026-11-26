@@ -132,8 +132,8 @@ const COUNTRIES = [
     status: 'Sede y Enlace País',
     isHeadquarters: false,
     city: 'Ciudad de Guatemala',
-    description: 'Oficina nacional de vinculación con ministerios, fortalecimiento institucional y acompañamiento a proyectos de modernización estatal.',
-    highlight: 'Programas de Alta Dirección y Enlace Gubernamental',
+    description: 'Asistencia técnica con la Cancillería y la Academia de Diplomacia, la CRIE (gobierno corporativo del sector eléctrico regional), OSPESCA (pesca responsable) y el BID (blindaje climático de la infraestructura).',
+    highlight: 'Diplomacia, gobierno corporativo y resiliencia climática',
     officeEmail: 'guatemala@icap.ac.cr',
   },
   {
@@ -142,8 +142,8 @@ const COUNTRIES = [
     status: 'Centro Regional',
     isHeadquarters: false,
     city: 'Ciudad de Panamá',
-    description: 'Centro regional de capacitación técnica, formación ejecutiva y vinculación estratégica con organismos multilaterales de desarrollo.',
-    highlight: 'Hub Regional de Capacitación y Cooperación',
+    description: 'Metodología participativa de política pública para el fomento de la industria nacional con el Ministerio de Economía y Finanzas, además de programas regionales del BID (blindaje climático) y del SICA (prevención de la violencia contra las mujeres).',
+    highlight: 'Política industrial y resiliencia climática',
     officeEmail: 'panama@icap.ac.cr',
   },
   {
@@ -152,8 +152,8 @@ const COUNTRIES = [
     status: 'Estado Miembro SICA',
     isHeadquarters: false,
     city: 'Belmopán',
-    description: 'Programas de cooperación técnica bilingüe, gestión ambiental, resiliencia climática y formación de cuadros públicos.',
-    highlight: 'Cooperación Técnica e Integración Regional',
+    description: 'Participa en programas regionales: concientización sobre pesca responsable con OSPESCA y el diplomado del SICA en prevención de la violencia contra las mujeres y la trata de personas.',
+    highlight: 'Pesca responsable y prevención de la violencia',
     officeEmail: 'belice@icap.ac.cr',
   },
   {
@@ -162,8 +162,8 @@ const COUNTRIES = [
     status: 'Estado Miembro SICA',
     isHeadquarters: false,
     city: 'San Salvador',
-    description: 'Acompañamiento en transformación digital del gobierno, innovación ciudadana y optimización de proyectos de inversión estatal.',
-    highlight: 'Transformación Digital y Servicios Ciudadanos',
+    description: 'Participa en las dos fases del mecanismo regional del BID para la gestión integral del riesgo y el blindaje climático de la infraestructura.',
+    highlight: 'Gestión del riesgo y blindaje climático',
     officeEmail: 'elsalvador@icap.ac.cr',
   },
   {
@@ -172,8 +172,8 @@ const COUNTRIES = [
     status: 'Estado Miembro SICA',
     isHeadquarters: false,
     city: 'Tegucigalpa',
-    description: 'Fortalecimiento de la gestión en salud pública, programas de posgrado y modernización de la administración territorial.',
-    highlight: 'Gerencia en Salud y Políticas Públicas',
+    description: 'Participa en la primera fase del mecanismo regional del BID para la gestión integral del riesgo y el blindaje climático de la infraestructura.',
+    highlight: 'Gestión del riesgo y blindaje climático',
     officeEmail: 'honduras@icap.ac.cr',
   },
   {
@@ -182,8 +182,8 @@ const COUNTRIES = [
     status: 'Estado Miembro SICA',
     isHeadquarters: false,
     city: 'Managua',
-    description: 'Capacitación en planificación estratégica, gestión por resultados y fortalecimiento de las capacidades del servidor público.',
-    highlight: 'Formación y Planificación Estratégica',
+    description: 'Estado miembro del SICA. Ningún proyecto con evidencia lo nombra de forma específica; los proyectos de alcance centroamericano no se atribuyen a países en particular.',
+    highlight: 'Estado miembro del SICA',
     officeEmail: 'nicaragua@icap.ac.cr',
   },
   {
@@ -192,8 +192,8 @@ const COUNTRIES = [
     status: 'Estado Miembro SICA',
     isHeadquarters: false,
     city: 'Santo Domingo',
-    description: 'Convenios de formación académica superior, compras públicas sostenibles y vinculación caribeña-centroamericana.',
-    highlight: 'Alianzas de Posgrado y Contratación Pública',
+    description: 'Especialización en evaluación de necesidades post-desastre (PDNA) con el PNUD, prioridades de adaptación climática con el Programa Estado de la Nación y programas del SICA en seguridad, justicia y prevención de la violencia.',
+    highlight: 'Recuperación post-desastre y adaptación climática',
     officeEmail: 'repdominicana@icap.ac.cr',
   },
   {
@@ -202,8 +202,8 @@ const COUNTRIES = [
     status: 'Cooperación Regional',
     isHeadquarters: false,
     city: 'Ciudad de México',
-    description: 'Convenios de investigación aplicada, intercambio de expertos con instituciones académicas y proyectos mesoamericanos.',
-    highlight: 'Alianzas Académicas Mesoamericanas',
+    description: 'Fortalecimiento de capacidades en compras públicas sostenibles y ecoetiquetado con la GIZ, junto a Brasil, Colombia, Costa Rica y Ecuador.',
+    highlight: 'Compras públicas sostenibles',
     officeEmail: 'mexico@icap.ac.cr',
   },
   {
@@ -212,8 +212,8 @@ const COUNTRIES = [
     status: 'Cooperación Regional',
     isHeadquarters: false,
     city: 'Bogotá',
-    description: 'Cooperación Sur-Sur en innovación pública, gestión de la seguridad social y transferencia de buenas prácticas.',
-    highlight: 'Innovación Pública y Cooperación Sur-Sur',
+    description: 'Fortalecimiento de capacidades en compras públicas sostenibles y ecoetiquetado con la GIZ, junto a México, Brasil, Costa Rica y Ecuador.',
+    highlight: 'Compras públicas sostenibles',
     officeEmail: 'colombia@icap.ac.cr',
   }
 ];

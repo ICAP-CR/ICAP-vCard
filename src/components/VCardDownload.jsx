@@ -11,13 +11,14 @@ export const defaultContact = {
   title: 'Cargo Institucional',
   org: 'Instituto Centroamericano de Administración Pública (ICAP)',
   phone: '+(506) 4001-2985',
-  cellPhone: '+(506) 4001-2985',
-  email: 'contacto@icap.ac.cr',
-  // Correo de Asistencia Técnica: Contacto lo usa cuando el departamento
-  // activo es AT.
+  // Celular del WhatsApp institucional.
+  cellPhone: '+(506) 8690-9583',
+  // Correo general (Docencia); Contacto usa `emailAT` cuando el
+  // departamento activo es Asistencia Técnica.
+  email: 'info@icap.ac.cr',
   emailAT: 'asistenciatecnica@icap.ac.cr',
   url: 'https://icap.ac.cr',
-  linkedin: 'https://linkedin.com/company/icap-sica',
+  linkedin: 'https://www.linkedin.com/company/icapcentroamerica/posts/?feedView=all',
   address: '100 metros sur y 75 metros oeste de la heladería Pops, Curridabat, San José, Costa Rica.',
   notes: 'Organismo internacional del Sistema de la Integración Centroamericana (SICA) especializado en administración pública.',
   // Marca este contacto como dato de ejemplo. Ponelo en false (o quitá el campo)

@@ -3,6 +3,7 @@ import { Briefcase, Building2, Globe2 } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../theme/ThemeContext';
 import KickerBadge from '../components/KickerBadge';
+import { PROYECTOS_AT, totalClientes, paisesAtendidos } from '../data/proyectosData';
 
 /**
  * Cuenta de 0 hasta `value` con una curva ease-out (arranca rápido, frena
@@ -142,21 +143,23 @@ export default function StatsSection() {
   const stats = [
     {
       id: 'proyectos',
-      value: 124,
+      // Las tres cifras salen de la base de proyectos con evidencia
+      // (proyectosData.js), así siempre coinciden con Proyectos y Presencia.
+      value: PROYECTOS_AT.length,
       color: 'text-[#003366] dark:text-white',
       hex: navyHex,
       icon: Briefcase
     },
     {
       id: 'clientes',
-      value: 47,
+      value: totalClientes,
       color: 'text-[#0077C8]',
       hex: '#0077C8',
       icon: Building2
     },
     {
       id: 'paises',
-      value: 18,
+      value: paisesAtendidos,
       color: 'text-[#003366] dark:text-white',
       hex: navyHex,
       icon: Globe2
