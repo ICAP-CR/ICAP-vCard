@@ -78,23 +78,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Animations */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Tira infinita de aliados: duplicar el arreglo y trasladar -50% sólo
-   da un loop sin costura si las dos mitades miden EXACTAMENTE lo mismo.
-   Con `gap` no se cumple (16 tarjetas tienen 15 gaps), así que el
-   espaciado va como margen en cada tarjeta (ver AlliesMarquee.jsx). */
-.animate-marquee {
+/* Tira infinita de aliados (AlliesMarquee.jsx): la mueve JS para poder
+   jalarla. El arreglo va duplicado y al pasar media tira se vuelve al
+   principio, lo que sólo queda sin costura si las dos mitades miden
+   EXACTAMENTE lo mismo. Con `gap` no se cumple (la última tarjeta no
+   tiene gap después), así que el espaciado va como margen en cada
+   tarjeta. */
+.tira-aliados {
   display: flex;
   width: max-content;
-  animation: marquee 48s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
+  will-change: transform;
 }
 
 @keyframes slideUp {

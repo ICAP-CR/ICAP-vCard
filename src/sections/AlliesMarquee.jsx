@@ -9,17 +9,52 @@ import sicaLogo from '../assets/allies/sica.png';
 import bidLogo from '../assets/allies/bid.png';
 import flacsoLogo from '../assets/allies/flacso.png';
 import aecidLogo from '../assets/allies/aecid.png';
+import ospescaLogo from '../assets/allies/ospesca.png';
+import cenpromypeLogo from '../assets/allies/cenpromype.png';
+import crieLogo from '../assets/allies/crie.png';
+import gizLogo from '../assets/allies/giz.png';
+import bancoMundialLogo from '../assets/allies/banco-mundial.png';
+import pnudLogo from '../assets/allies/pnud.png';
+import unescoLogo from '../assets/allies/unesco.png';
+import unicefLogo from '../assets/allies/unicef.png';
+import oitLogo from '../assets/allies/oit.png';
+import iicaLogo from '../assets/allies/iica.png';
+import uicnLogo from '../assets/allies/uicn.png';
+import oimLogo from '../assets/allies/oim.png';
 
 /**
  * Organismos aliados del ICAP: los organismos internacionales y del SICA
  * que figuran como clientes en la base de proyectos con evidencia
  * (SOCIOS / proyectosDeSocio() en proyectosData.js). Nombre y descripción
- * salen de translations.js (allies.items). Los que tienen logo en
- * src/assets/allies lo muestran; los demás, sus siglas.
+ * salen de translations.js (allies.items) y el logo de src/assets/allies
+ * (recortados al contenido y en cuadrado de 256 px). Si a alguno le falta
+ * el logo, se muestran sus siglas.
  *
  * Van ordenados por cantidad de proyectos, con el SICA siempre primero.
  */
-const LOGOS = { sica: sicaLogo, bid: bidLogo, flacso: flacsoLogo, aecid: aecidLogo };
+const LOGOS = {
+  sica: sicaLogo,
+  bid: bidLogo,
+  flacso: flacsoLogo,
+  aecid: aecidLogo,
+  ospesca: ospescaLogo,
+  cenpromype: cenpromypeLogo,
+  crie: crieLogo,
+  giz: gizLogo,
+  'banco-mundial': bancoMundialLogo,
+  pnud: pnudLogo,
+  unesco: unescoLogo,
+  unicef: unicefLogo,
+  oit: oitLogo,
+  iica: iicaLogo,
+  uicn: uicnLogo,
+  oim: oimLogo
+};
+
+// Tira: velocidad del avance solo (px por ms, hacia la izquierda) y cuánto
+// hay que mover el puntero para que cuente como arrastre y no como clic.
+const VELOCIDAD = 0.045;
+const UMBRAL_ARRASTRE = 6;
 
 const ALLIES = SOCIOS.map((id) => ({ id, logo: LOGOS[id] || null, n: proyectosDeSocio(id).length }))
   .filter((a) => a.n > 0)
@@ -29,7 +64,7 @@ function AllyIconBadge({ ally, size = 'w-8 h-8', textSize = 'text-xs' }) {
   if (ally.logo) {
     return (
       <div className={`${size} rounded-lg bg-white flex items-center justify-center overflow-hidden shrink-0`}>
-        <img src={ally.logo} alt={ally.name} className="w-full h-full object-contain p-1" />
+        <img src={ally.logo} alt={ally.name} draggable={false} className="w-full h-full object-contain p-1" />
       </div>
     );
   }
@@ -200,6 +235,108 @@ export default function AlliesMarquee({ onNavigate }) {
   const showBubble = Boolean(selected && isDesktopRef.current && bubblePos);
   const showSheet = Boolean(selected && !isDesktopRef.current);
 
+  // --- Tira que avanza sola y se puede jalar ----------------------------
+  // El desplazamiento lo lleva JS (no una animación CSS) para poder
+  // arrastrarla: se agarra con el mouse o el dedo y se suelta con un poco
+  // de inercia. La tira está duplicada; al pasar media tira se vuelve al
+  // principio sin que se note. Se detiene con el mouse encima, mientras
+  // la ficha de un socio está abierta y con prefers-reduced-motion (que
+  // igual deja arrastrar).
+  const pistaRef = useRef(null);
+  const offsetRef = useRef(0);
+  const inerciaRef = useRef(0); // px/ms que quedan después de soltar
+  const encimaRef = useRef(false);
+  const abiertaRef = useRef(false);
+  const arrastreRef = useRef(null); // { id, x0, offset0, movido, ultX, ultT, vel }
+  const fueArrastreRef = useRef(false);
+  const [arrastrando, setArrastrando] = useState(false);
+
+  useEffect(() => {
+    abiertaRef.current = Boolean(selected);
+  }, [selected]);
+
+  useEffect(() => {
+    const pista = pistaRef.current;
+    if (!pista) return undefined;
+    const view = pista.ownerDocument.defaultView;
+    const sinMovimiento = view.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let raf = 0;
+    let antes = view.performance.now();
+    const cuadro = (ahora) => {
+      const dt = Math.min(64, ahora - antes);
+      antes = ahora;
+      const mitad = pista.scrollWidth / 2;
+      if (!arrastreRef.current && mitad > 0) {
+        let paso = 0;
+        if (Math.abs(inerciaRef.current) > 0.01) {
+          paso = inerciaRef.current * dt;
+          inerciaRef.current *= 0.95 ** (dt / 16);
+        } else if (!sinMovimiento && !encimaRef.current && !abiertaRef.current) {
+          paso = -VELOCIDAD * dt;
+        }
+        offsetRef.current += paso;
+      }
+      if (mitad > 0) {
+        while (offsetRef.current <= -mitad) offsetRef.current += mitad;
+        while (offsetRef.current > 0) offsetRef.current -= mitad;
+      }
+      pista.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+      raf = view.requestAnimationFrame(cuadro);
+    };
+    raf = view.requestAnimationFrame(cuadro);
+    return () => view.cancelAnimationFrame(raf);
+  }, []);
+
+  const alPresionar = (e) => {
+    if (e.button !== 0) return;
+    inerciaRef.current = 0;
+    arrastreRef.current = { id: e.pointerId, x0: e.clientX, offset0: offsetRef.current, movido: false, ultX: e.clientX, ultT: e.timeStamp, vel: 0 };
+  };
+  const alMover = (e) => {
+    const a = arrastreRef.current;
+    if (!a || a.id !== e.pointerId) return;
+    const dx = e.clientX - a.x0;
+    // Recién al pasar el umbral es arrastre: así un clic normal sigue
+    // abriendo la ficha del socio. La captura del puntero se toma ahí y
+    // no antes, porque capturar desde el inicio mandaría el clic a la
+    // pista en vez de a la tarjeta.
+    if (!a.movido && Math.abs(dx) > UMBRAL_ARRASTRE) {
+      a.movido = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      setArrastrando(true);
+    }
+    if (!a.movido) return;
+    offsetRef.current = a.offset0 + dx;
+    const dt = e.timeStamp - a.ultT;
+    if (dt > 0) a.vel = 0.8 * ((e.clientX - a.ultX) / dt) + 0.2 * a.vel;
+    a.ultX = e.clientX;
+    a.ultT = e.timeStamp;
+  };
+  const alSoltar = (e) => {
+    const a = arrastreRef.current;
+    if (!a || a.id !== e.pointerId) return;
+    arrastreRef.current = null;
+    if (a.movido) {
+      // El clic que el navegador dispara al soltar llega enseguida; si no
+      // llega (no siempre lo hay tras un arrastre), la marca se borra sola
+      // para no comerse el próximo clic de verdad.
+      fueArrastreRef.current = true;
+      setTimeout(() => {
+        fueArrastreRef.current = false;
+      }, 0);
+      inerciaRef.current = Math.max(-3, Math.min(3, a.vel));
+      setArrastrando(false);
+    }
+  };
+  // El clic que llega justo después de un arrastre no abre la ficha.
+  const alClicCaptura = (e) => {
+    if (fueArrastreRef.current) {
+      fueArrastreRef.current = false;
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
   return (
     <section ref={sectionRef} className="py-12 bg-gradient-to-br from-[#003366] via-[#0B5A96] to-[#0077C8] text-white overflow-hidden border-y border-white/5 relative">
       <div className="max-w-4xl mx-auto px-6 mb-8 text-center">
@@ -224,16 +361,32 @@ export default function AlliesMarquee({ onNavigate }) {
         <div className="absolute left-0 inset-y-0 w-16 bg-gradient-to-r from-[#003366] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 inset-y-0 w-16 bg-gradient-to-l from-[#0077C8] to-transparent z-10 pointer-events-none" />
 
+        {/* touch-action pan-y: en el celular el gesto vertical sigue
+            bajando la página y el horizontal jala la tira. */}
         <div
-          className="animate-marquee flex items-center"
-          style={selected ? { animationPlayState: 'paused' } : undefined}
+          ref={pistaRef}
+          className={`tira-aliados flex items-center select-none touch-pan-y ${arrastrando ? 'cursor-grabbing' : 'cursor-grab'}`}
+          onPointerDown={alPresionar}
+          onPointerMove={alMover}
+          onPointerUp={alSoltar}
+          onPointerCancel={alSoltar}
+          onClickCapture={alClicCaptura}
+          onMouseEnter={() => {
+            encimaRef.current = true;
+          }}
+          onMouseLeave={() => {
+            encimaRef.current = false;
+          }}
+          onDragStart={(e) => e.preventDefault()}
         >
           {[...alliesT, ...alliesT].map((item, idx) => (
             <button
               key={idx}
               type="button"
               onClick={(e) => handleSelect(item, e)}
-              className="flex items-center gap-3.5 px-7 py-4.5 mr-5 rounded-2xl bg-white/10 border border-white/20 hover:border-white/50 hover:bg-white/20 transition-all min-w-[240px] sm:min-w-[290px] shrink-0 group text-left cursor-pointer"
+              className={`flex items-center gap-3.5 px-7 py-4.5 mr-5 rounded-2xl bg-white/10 border border-white/20 hover:border-white/50 hover:bg-white/20 transition-[background-color,border-color] min-w-[240px] sm:min-w-[290px] shrink-0 group text-left ${
+                arrastrando ? 'cursor-grabbing' : 'cursor-pointer'
+              }`}
             >
               <AllyIconBadge ally={item} size="w-11 h-11" textSize="text-sm" />
               <div className="flex flex-col min-w-0 flex-1">
