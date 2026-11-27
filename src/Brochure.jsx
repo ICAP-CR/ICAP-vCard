@@ -7,7 +7,6 @@ import SpecializationAreas from './sections/SpecializationAreas';
 import AuthoritiesSection from './sections/AuthoritiesSection';
 import RegionalMap from './sections/RegionalMap';
 import ProyectosAT from './sections/ProyectosAT';
-import AlliesMarquee from './sections/AlliesMarquee';
 import ContactSection from './sections/ContactSection';
 import DocenciaMision from './sections/DocenciaMision';
 import DocenciaImpacto from './sections/DocenciaImpacto';
@@ -26,7 +25,8 @@ import {
   Globe,
   Sun,
   Moon,
-  Settings
+  Settings,
+  ArrowLeft
 } from 'lucide-react';
 import { defaultContact } from './components/VCardDownload';
 import { PAGES, DOCENCIA_PAGES } from './data/navigation';
@@ -86,15 +86,19 @@ export default function Brochure({
     setFiltroProyectos(null);
     setActivePage('inicio');
     // La dirección del navegador acompaña al switch, así recargar o
-    // compartir el link abre en el departamento que se está viendo.
-    try {
-      const path = dept === 'docencia' ? DOCENCIA_PATH : BASE;
-      if (window.location.pathname !== path) {
-        window.history.replaceState(null, '', path + window.location.search + window.location.hash);
+    // compartir el link abre en el departamento que se está viendo. Va
+    // después de descartar el historial de "volver" (que retrocede en el
+    // history), para que el cambio de dirección quede en la entrada final.
+    olvidarHistorial(() => {
+      try {
+        const path = dept === 'docencia' ? DOCENCIA_PATH : BASE;
+        if (window.location.pathname !== path) {
+          window.history.replaceState(null, '', path + window.location.search + window.location.hash);
+        }
+      } catch {
+        // Sin acceso al history: el switch funciona igual.
       }
-    } catch {
-      // Sin acceso al history: el switch funciona igual.
-    }
+    });
   };
 
   // --- Menú de configuración (engranaje): vista, idioma y tema ---------
@@ -121,9 +125,134 @@ export default function Brochure({
     setActivePage(id);
   };
 
+  // --- Volver atrás ------------------------------------------------------
+  // Cuando se llega a una sección tocando algo del contenido (una tarjeta
+  // de Cifras, un área, un país, un socio) y no el menú, se guarda de dónde
+  // se venía (sección, filtro y scroll) para poder volver: en la compu con
+  // la flechita de arriba a la izquierda y en celulares y tablets
+  // deslizando desde el borde izquierdo. Cada paso también se apunta en el
+  // history del navegador, así el botón "atrás" del navegador o del
+  // teléfono hace lo mismo en vez de sacarlo a uno de la página. Navegar
+  // con el menú (o cambiar de departamento) descarta el historial.
+  const historialRef = useRef([]); // [{ page, filtro, scroll }]
+  const [volverA, setVolverA] = useState(null); // sección a la que se vuelve
+  const restaurarScrollRef = useRef(null);
+  const popIgnoradoRef = useRef(null); // { despues } mientras se descarta el history
+
+  const irDesdeContenido = (id, filtro = null) => {
+    historialRef.current.push({ page: activePage, filtro: filtroProyectos, scroll: mainRef.current?.scrollTop || 0 });
+    setVolverA(activePage);
+    try {
+      window.history.pushState({ icapVolver: historialRef.current.length }, '');
+    } catch {
+      // Sin history: la flechita y el deslizar funcionan igual (ver volver).
+    }
+    goToPage(id, filtro);
+  };
+
+  const aplicarVolver = () => {
+    const anterior = historialRef.current.pop();
+    if (!anterior) return;
+    const pila = historialRef.current;
+    setVolverA(pila.length ? pila[pila.length - 1].page : null);
+    restaurarScrollRef.current = anterior.scroll;
+    setFiltroProyectos(anterior.filtro);
+    setActivePage(anterior.page);
+  };
+
+  const volver = () => {
+    if (!historialRef.current.length) return;
+    try {
+      window.history.back(); // el popstate de abajo llama a aplicarVolver
+    } catch {
+      aplicarVolver();
+    }
+  };
+
+  // Descarta el historial y saca del history del navegador los pasos que
+  // se habían apuntado. `despues` corre cuando el navegador terminó de
+  // retroceder (o enseguida, si no había nada que descartar).
+  const olvidarHistorial = (despues = () => {}) => {
+    const n = historialRef.current.length;
+    historialRef.current = [];
+    setVolverA(null);
+    if (!n) {
+      despues();
+      return;
+    }
+    popIgnoradoRef.current = { despues };
+    try {
+      window.history.go(-n);
+    } catch {
+      popIgnoradoRef.current = null;
+      despues();
+    }
+  };
+
   useEffect(() => {
+    const onPop = () => {
+      if (popIgnoradoRef.current) {
+        const { despues } = popIgnoradoRef.current;
+        popIgnoradoRef.current = null;
+        despues();
+        return;
+      }
+      aplicarVolver();
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  // Navegar con el menú (inferior o del encabezado).
+  const irDesdeMenu = (id) => {
+    olvidarHistorial();
+    goToPage(id);
+  };
+
+  // Deslizar desde el borde izquierdo hacia la derecha = volver (pantallas
+  // táctiles). `arrastreVolver` (0-1) mueve la flecha que va asomando.
+  const BORDE_VOLVER = 28; // px desde el borde izquierdo donde arranca el gesto
+  const DISTANCIA_VOLVER = 80; // px que hay que deslizar para volver
+  const gestoRef = useRef(null);
+  const [arrastreVolver, setArrastreVolver] = useState(0);
+
+  const alTocarInicio = (e) => {
+    if (!volverA || e.touches.length !== 1) return;
+    const toque = e.touches[0];
+    if (toque.clientX > BORDE_VOLVER) return;
+    gestoRef.current = { x0: toque.clientX, y0: toque.clientY, dx: 0, horizontal: null };
+  };
+  const alTocarMover = (e) => {
+    const g = gestoRef.current;
+    if (!g) return;
+    const toque = e.touches[0];
+    const dx = toque.clientX - g.x0;
+    const dy = toque.clientY - g.y0;
+    if (g.horizontal === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      g.horizontal = Math.abs(dx) > Math.abs(dy);
+      if (!g.horizontal) {
+        gestoRef.current = null; // era un scroll vertical
+        return;
+      }
+    }
+    if (!g.horizontal) return;
+    g.dx = Math.max(0, dx);
+    setArrastreVolver(Math.min(1, g.dx / DISTANCIA_VOLVER));
+  };
+  const alTocarFin = () => {
+    const g = gestoRef.current;
+    gestoRef.current = null;
+    setArrastreVolver(0);
+    if (g?.horizontal && g.dx >= DISTANCIA_VOLVER) volver();
+  };
+
+  // Al cambiar de sección se arranca arriba, salvo al volver atrás: ahí se
+  // regresa al mismo punto del scroll donde se estaba.
+  useEffect(() => {
+    const top = restaurarScrollRef.current ?? 0;
+    restaurarScrollRef.current = null;
     if (mainRef.current) {
-      mainRef.current.scrollTo({ top: 0, behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
+      mainRef.current.scrollTo({ top, behavior: 'instant' in document.documentElement.style ? 'instant' : 'auto' });
     }
   }, [activePage, activeDept]);
 
@@ -203,6 +332,17 @@ export default function Brochure({
   const [orb, setOrb] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const [orbReady, setOrbReady] = useState(false);
 
+  // --- Llamado de atención del menú inferior ----------------------------
+  // En el celular el menú de abajo pasaba desapercibido: al entrar a la
+  // página da un saltito y los íconos brincan en ola (.nav-llamado en
+  // global.css, sólo < 768px). Se quita al terminar para que no se repita
+  // con los botones nuevos al cambiar de departamento.
+  const [navLlamado, setNavLlamado] = useState(true);
+  useEffect(() => {
+    const id = setTimeout(() => setNavLlamado(false), 3200);
+    return () => clearTimeout(id);
+  }, []);
+
   const measureOrb = () => {
     const nav = navRef.current;
     const btn = itemRefs.current[activePage];
@@ -270,17 +410,22 @@ export default function Brochure({
       case 'inicio':
         return (
           <>
-            <Hero onNavigate={goToPage} pages={activePages} dept={activeDept} />
-            {/* Debajo del Hero: AT muestra Cifras y Socios; Docencia, el texto de
-                Formación sin el carrusel de cards (showCards en DocenciaMision.jsx). */}
+            {/* En AT el Hero (`continuo`, sin fondo propio) y las Cifras
+                comparten un solo degradado, para que se lean como una sola
+                sección larga y no como dos. */}
             {activeDept === 'at' ? (
-              <>
-                <StatsSection />
-                <AlliesMarquee onNavigate={goToPage} />
-              </>
+              <div className="bg-[linear-gradient(165deg,#003366_0%,#0B5A96_30%,#0077C8_56%,#0B5A96_80%,#003366_100%)]">
+                <Hero dept={activeDept} continuo />
+                <StatsSection onNavigate={irDesdeContenido} />
+              </div>
             ) : (
-              <DocenciaMision showCards={false} />
+              <Hero dept={activeDept} />
             )}
+            {/* Debajo del Hero: AT muestra Cifras (sus tarjetas llevan a
+                Proyectos, Presencia y la ventana de Alianzas); Docencia, el
+                texto de Formación sin el carrusel de cards (showCards en
+                DocenciaMision.jsx). */}
+            {activeDept !== 'at' && <DocenciaMision showCards={false} />}
           </>
         );
       case 'mision':
@@ -290,9 +435,9 @@ export default function Brochure({
       case 'autoridades':
         return <AuthoritiesSection dept={activeDept} />;
       case 'areas':
-        return <SpecializationAreas onNavigate={goToPage} />;
+        return <SpecializationAreas onNavigate={irDesdeContenido} />;
       case 'presencia':
-        return <RegionalMap onNavigate={goToPage} />;
+        return <RegionalMap onNavigate={irDesdeContenido} />;
       case 'proyectos':
         return <ProyectosAT filtroInicial={filtroProyectos} />;
       case 'contacto':
@@ -324,7 +469,7 @@ export default function Brochure({
       {/* Sticky Utility Navbar */}
       <header className="shrink-0 z-40 bg-gradient-to-br from-[#003366]/95 via-[#0B5A96]/95 to-[#0077C8]/95 dark:bg-none dark:bg-[#003366]/95 backdrop-blur-md border-b border-white/10 px-3 min-[380px]:px-4 sm:px-6 py-3 flex items-center gap-2 shadow-sm">
         <button
-          onClick={() => goToPage('inicio')}
+          onClick={() => irDesdeMenu('inicio')}
           className="flex items-center gap-2 cursor-pointer group shrink-0"
           title={t.header.home}
         >
@@ -383,7 +528,7 @@ export default function Brochure({
             {t.header.about}
           </button>
           <button
-            onClick={() => goToPage('contacto')}
+            onClick={() => irDesdeMenu('contacto')}
             className="h-8 whitespace-nowrap px-3 min-[380px]:px-3.5 sm:px-4 rounded-xl bg-black/30 hover:bg-white/10 border border-white/10 text-white font-heading font-bold text-xs tracking-wider uppercase shadow transition-all active:scale-95 shrink-0"
           >
             {t.header.contact}
@@ -540,16 +685,70 @@ export default function Brochure({
       </div>
 
       {/* Active Page */}
-      <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-        <div ref={pageRef} key={`${activeDept}-${activePage}`} className="animate-page-in">
-          {renderPage()}
-        </div>
-      </main>
+      <div
+        className="relative flex-1 min-h-0 flex flex-col"
+        onTouchStart={alTocarInicio}
+        onTouchMove={alTocarMover}
+        onTouchEnd={alTocarFin}
+        onTouchCancel={alTocarFin}
+      >
+        <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+          <div ref={pageRef} key={`${activeDept}-${activePage}`} className="animate-page-in">
+            {renderPage()}
+          </div>
+        </main>
+
+        {/* Volver con mouse (compu): flechita arriba a la izquierda, debajo
+            del encabezado. Sólo se muestra con mouse (.volver-boton en
+            global.css); en pantallas táctiles se vuelve deslizando. */}
+        {volverA && (
+          <button
+            type="button"
+            key={volverA}
+            onClick={volver}
+            title={`${t.common.back}: ${t.nav[volverA]}`}
+            className="volver-boton hidden absolute top-3 left-3 sm:top-4 sm:left-4 z-20 items-center gap-1.5 h-9 pl-2.5 pr-3.5 rounded-full bg-white/95 dark:bg-[#003366]/95 backdrop-blur-md border border-slate-200 dark:border-white/15 shadow-lg shadow-black/15 text-[#003366] dark:text-white text-xs font-heading font-bold group hover:border-[#0077C8]/50 transition-colors animate-fade-in"
+          >
+            <ArrowLeft className="w-4 h-4 text-[#0077C8] dark:text-[#7dd3fc] transition-transform group-hover:-translate-x-0.5" />
+            <span>
+              {t.common.back}
+              <span className="font-semibold text-slate-500 dark:text-[#9FC6E8]"> · {t.nav[volverA]}</span>
+            </span>
+          </button>
+        )}
+
+        {/* Volver táctil: una flecha asoma un momento en el borde izquierdo
+            al llegar a la sección, para enseñar el gesto, y sigue al dedo
+            mientras se desliza (.volver-borde en global.css). */}
+        {volverA && (
+          <div aria-hidden="true" className="volver-borde pointer-events-none absolute left-0 top-1/2 z-20 -translate-y-1/2">
+            <div
+              key={volverA}
+              className={arrastreVolver ? 'volver-arrastre' : 'volver-asomo'}
+              style={
+                arrastreVolver
+                  ? { transform: `translateX(${-36 + arrastreVolver * 52}px)`, opacity: 0.35 + arrastreVolver * 0.65 }
+                  : undefined
+              }
+            >
+              <div
+                className={`w-11 h-11 rounded-full flex items-center justify-center shadow-lg shadow-black/20 border transition-colors ${
+                  arrastreVolver >= 1
+                    ? 'bg-[#0077C8] border-[#0077C8] text-white'
+                    : 'bg-white/95 dark:bg-[#003366]/95 border-slate-200 dark:border-white/15 text-[#0077C8] dark:text-[#7dd3fc]'
+                }`}
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Bottom App Navigation */}
       <nav
         ref={navRef}
-        className="shrink-0 z-30 bg-white dark:bg-[#003366]/95 backdrop-blur-md border-t border-slate-200 dark:border-white/10 shadow-[0_-4px_16px_rgba(0,51,102,0.08)] dark:shadow-[0_-4px_16px_rgba(0,0,0,0.4)] px-1 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] flex items-stretch justify-between relative"
+        className={`${navLlamado ? 'nav-llamado ' : ''}shrink-0 z-30 bg-white dark:bg-[#003366]/95 backdrop-blur-md border-t border-slate-200 dark:border-white/10 shadow-[0_-4px_16px_rgba(0,51,102,0.08)] dark:shadow-[0_-4px_16px_rgba(0,0,0,0.4)] px-1 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] flex items-stretch justify-between relative`}
       >
         {/* Esfera animada del menú: un wrapper de posición (transición de
             traslado) que envuelve el halo pulsante y la esfera principal,
@@ -582,7 +781,7 @@ export default function Brochure({
             }}
           />
         </div>
-        {activePages.map((page) => {
+        {activePages.map((page, i) => {
           const Icon = page.icon;
           const active = activePage === page.id;
           return (
@@ -591,14 +790,15 @@ export default function Brochure({
               ref={(el) => {
                 itemRefs.current[page.id] = el;
               }}
-              onClick={() => goToPage(page.id)}
+              onClick={() => irDesdeMenu(page.id)}
               title={soloIconos ? t.nav[page.id] : undefined}
               className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 rounded-xl transition-colors relative z-10 ${
                 soloIconos ? 'py-2.5' : 'py-1.5'
               }`}
             >
               <Icon
-                className={`w-[19px] h-[19px] transition-all duration-300 ${
+                style={{ '--i': i }}
+                className={`nav-llamado-item w-[19px] h-[19px] transition-all duration-300 ${
                   active ? 'text-white scale-110' : 'text-slate-400'
                 }`}
                 strokeWidth={active ? 2.4 : 2}

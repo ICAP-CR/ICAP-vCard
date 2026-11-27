@@ -1,6 +1,5 @@
 import { ChevronDown, Handshake, GraduationCap } from 'lucide-react';
 import icapLogoMark from '../assets/icap-logo-mark.png';
-import SectionsStrip from '../components/SectionsStrip';
 import { useLanguage } from '../i18n/LanguageContext';
 
 // Puntos flotantes decorativos del fondo del Hero. Posiciones y tiempos
@@ -49,10 +48,13 @@ function DeptBadge({ dept, label }) {
   );
 }
 
-export default function Hero({ onNavigate, pages, dept = 'at' }) {
+// `continuo`: el Hero no pinta su propio degradado y deja ver el del
+// contenedor de Brochure.jsx, que sigue debajo con las Cifras, para que se
+// lean como una sola sección larga.
+export default function Hero({ dept = 'at', continuo = false }) {
   const { t } = useLanguage();
   return (
-    <section className="hero-screen relative min-h-[max(var(--main-h,100dvh),540px)] bg-gradient-to-br from-[#003366] via-[#0B5A96] to-[#0077C8] text-white px-4 sm:px-6 pt-4 sm:pt-6 pb-5 sm:pb-7 flex flex-col items-center text-center overflow-hidden">
+    <section className={`hero-screen relative min-h-[max(var(--main-h,100dvh),540px)] ${continuo ? '' : 'bg-gradient-to-br from-[#003366] via-[#0B5A96] to-[#0077C8]'} text-white px-4 sm:px-6 pt-4 sm:pt-6 pb-5 sm:pb-7 flex flex-col items-center text-center overflow-hidden`}>
       {/* Resplandor radial de fondo, con una deriva muy lenta para que respire */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.18),rgba(0,119,200,0)_65%)] pointer-events-none animate-glow-drift" />
 
@@ -130,12 +132,6 @@ export default function Hero({ onNavigate, pages, dept = 'at' }) {
             }}
           />
         ))}
-      </div>
-
-      {/* Accesos rápidos embebidos en el Hero, para que compartan su fondo. Van
-          fuera de la columna angosta del texto para tener más ancho. */}
-      <div className="relative z-10 w-full max-w-3xl sm:max-w-4xl mx-auto animate-hero-rise" style={{ animationDelay: '0ms' }}>
-        <SectionsStrip onNavigate={onNavigate} pages={pages} />
       </div>
 
       {/* Bloque central: ocupa todo el alto que sobra y se centra; el

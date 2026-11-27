@@ -36,7 +36,7 @@ export const ETIQUETAS = [
     desc: { es: 'Análisis económicos, pronósticos y cadenas de valor para decisiones públicas mejor informadas.', en: 'Economic analysis, forecasts and value chains for better-informed public decisions.' } },
   { id: 'politica', color: '#2563EB', text: '#FFFFFF', icon: Landmark, es: 'Política pública', en: 'Public policy',
     desc: { es: 'Diseño, regulación y evaluación de políticas públicas basadas en evidencia.', en: 'Design, regulation and evaluation of evidence-based public policy.' } },
-  { id: 'genero', color: '#C64FB8', text: '#FFFFFF', icon: Scale, es: 'Equidad de género', en: 'Gender equity',
+  { id: 'genero', color: '#C64FB8', text: '#FFFFFF', icon: Scale, es: 'Igualdad y equidad de género', en: 'Gender equality and equity',
     desc: { es: 'Enfoque de igualdad en las instituciones, las políticas y los programas que llegan a la ciudadanía.', en: 'An equality lens for the institutions, policies and programs that reach citizens.' } },
   { id: 'energia', color: '#EAB308', text: '#2B2000', icon: Zap, es: 'Energía', en: 'Energy',
     desc: { es: 'Regulación, planificación y políticas del sector energético para una transición responsable.', en: 'Regulation, planning and policy for the energy sector and a responsible transition.' } },

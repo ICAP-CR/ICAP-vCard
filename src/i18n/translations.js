@@ -13,7 +13,8 @@
 export const translations = {
   es: {
     common: {
-      close: 'Cerrar'
+      close: 'Cerrar',
+      back: 'Volver'
     },
 
     header: {
@@ -109,10 +110,10 @@ export const translations = {
     stats: {
       kicker: 'Trayectoria e Impacto',
       title: 'ICAP en Cifras',
-      badge: 'Proyectos con evidencia · Base de proyectos ICAP',
+      badge: 'Proyectos de los últimos años',
       items: {
         proyectos: { label: 'Proyectos', sublabel: 'ejecutados' },
-        clientes: { label: 'Clientes', sublabel: 'institucionales' },
+        clientes: { label: 'Aliados', sublabel: 'estratégicos' },
         paises: { label: 'Países', sublabel: 'atendidos' }
       }
     },
@@ -575,9 +576,10 @@ export const translations = {
 
     allies: {
       kicker: 'Red Institucional',
-      title: 'Organismos y Socios de Cooperación',
+      title: 'Alianzas estratégicas',
       subtitle: 'Tocá una institución para ver los proyectos que ha trabajado en conjunto con el ICAP.',
-      modalSubtitle: 'Organismo Aliado',
+      modalSubtitle: 'Aliado estratégico',
+      back: 'Todas las alianzas',
       noProjectRecord: 'Este organismo no figura como cliente en la base de proyectos con evidencia.',
       relatedProjects: 'Proyectos con el ICAP',
       projectAreasLabel: 'Áreas de especialización',
@@ -677,7 +679,8 @@ export const translations = {
 
   en: {
     common: {
-      close: 'Close'
+      close: 'Close',
+      back: 'Back'
     },
 
     header: {
@@ -772,10 +775,10 @@ export const translations = {
     stats: {
       kicker: 'Track Record & Impact',
       title: 'ICAP by the Numbers',
-      badge: 'Evidence-backed projects · ICAP project base',
+      badge: 'Projects from recent years',
       items: {
         proyectos: { label: 'Projects', sublabel: 'completed' },
-        clientes: { label: 'Clients', sublabel: 'institutional' },
+        clientes: { label: 'Partners', sublabel: 'strategic' },
         paises: { label: 'Countries', sublabel: 'served' }
       }
     },
@@ -1234,9 +1237,10 @@ export const translations = {
 
     allies: {
       kicker: 'Institutional Network',
-      title: 'Partner Organizations & Cooperation Agencies',
+      title: 'Strategic Alliances',
       subtitle: 'Tap an institution to see the projects it has carried out together with ICAP.',
-      modalSubtitle: 'Partner Organization',
+      modalSubtitle: 'Strategic partner',
+      back: 'All alliances',
       noProjectRecord: 'This organization does not appear as a client in the evidence-backed project base.',
       relatedProjects: 'Projects with ICAP',
       projectAreasLabel: 'Areas of specialization',

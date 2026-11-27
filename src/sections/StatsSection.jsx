@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Briefcase, Building2, Globe2 } from 'lucide-react';
+import { ArrowUpRight, Briefcase, Handshake, Globe2 } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
-import { useTheme } from '../theme/ThemeContext';
 import KickerBadge from '../components/KickerBadge';
-import { PROYECTOS_AT, totalClientes, paisesAtendidos } from '../data/proyectosData';
+import AlliancesSheet from './AlliancesSheet';
+import { PROYECTOS_AT, totalAliados, paisesAtendidos } from '../data/proyectosData';
 
 /**
  * Cuenta de 0 hasta `value` con una curva ease-out (arranca rápido, frena
@@ -78,21 +78,33 @@ function MiniGrowthChart({ start, hex, duration }) {
   );
 }
 
-function StatCard({ icon: Icon, value, label, sublabel, color, hex, visible, start, duration, enterDelay, popTick }) {
+function StatCard({ icon: Icon, value, label, sublabel, color, hex, visible, start, duration, enterDelay, popTick, onClick }) {
   const { display, progress } = useCountUp(value, start, duration);
   const dashOffset = RING_CIRCUMFERENCE * (1 - progress);
 
   return (
-    <div
-      className={`bg-slate-50 dark:bg-white/5 sm:bg-transparent dark:sm:bg-transparent rounded-2xl sm:rounded-none p-3 sm:p-4 flex flex-col items-center border border-slate-100/80 dark:border-white/10 sm:border-0 transition-all duration-700 ease-out ${
+    // Toda la tarjeta es un botón (lleva a su sección o abre las Alianzas).
+    // La entrada (fade + subida) va en este botón y el hover en la capa de
+    // adentro, para que la demora de entrada no frene el hover.
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`${value} ${label} ${sublabel}`}
+      className={`group block w-full text-center rounded-2xl transition-[opacity,transform] duration-700 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{ transitionDelay: visible ? `${enterDelay}ms` : '0ms' }}
     >
+    <div className="relative h-full bg-white/10 sm:bg-white/5 backdrop-blur-[2px] rounded-2xl p-3 sm:p-4 flex flex-col items-center border border-white/15 sm:border-white/10 transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-black/20 group-hover:bg-white/15 group-hover:border-white/40 group-active:scale-[0.97]">
+      {/* Flechita en la esquina: avisa que la tarjeta se puede tocar. */}
+      <ArrowUpRight
+        aria-hidden="true"
+        className="absolute top-2 right-2 w-3.5 h-3.5 text-white/40 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
+      />
       {/* Ícono con anillo de progreso: se llena en sincronía con el conteo */}
       <div className="relative w-10 h-10 mb-2">
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 40 40" aria-hidden="true">
-          <circle cx="20" cy="20" r={RING_RADIUS} fill="none" strokeWidth="3" className="stroke-slate-100 dark:stroke-white/10" />
+          <circle cx="20" cy="20" r={RING_RADIUS} fill="none" strokeWidth="3" className="stroke-white/15" />
           <circle
             cx="20"
             cy="20"
@@ -105,7 +117,7 @@ function StatCard({ icon: Icon, value, label, sublabel, color, hex, visible, sta
             style={{ strokeDasharray: RING_CIRCUMFERENCE, strokeDashoffset: dashOffset }}
           />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center text-slate-400 dark:text-slate-300">
+        <div className="absolute inset-0 flex items-center justify-center text-white/80">
           <Icon className="w-4 h-4" />
         </div>
       </div>
@@ -123,46 +135,52 @@ function StatCard({ icon: Icon, value, label, sublabel, color, hex, visible, sta
       >
         {display}
       </div>
-      <div className="font-heading font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 leading-tight">{label}</div>
-      <div className="text-[0.625rem] sm:text-xs text-slate-500 dark:text-slate-300 mt-0.5">{sublabel}</div>
+      <div className="font-heading font-bold text-xs sm:text-sm text-white leading-tight">{label}</div>
+      <div className="text-[0.625rem] sm:text-xs text-[#D6E9F7]/80 mt-0.5">{sublabel}</div>
 
       {/* Mini gráfico de barras: crece apenas arranca la animación, como
           adelanto visual antes de que el número empiece a subir. */}
       <MiniGrowthChart start={start} hex={hex} duration={duration} />
     </div>
+    </button>
   );
 }
 
-export default function StatsSection() {
+export default function StatsSection({ onNavigate = () => {} }) {
   const { t } = useLanguage();
-  const { theme } = useTheme();
-  // El anillo y el mini gráfico usan `hex` en un `style` inline, así que no
-  // reaccionan a `dark:`: acá se elige a mano un celeste más claro para el
-  // navy (#003366), que en fondo oscuro casi no se ve.
-  const navyHex = theme === 'dark' ? '#4FB2F2' : '#003366';
+  // La sección va siempre sobre el mismo degradado azul del Hero (es su
+  // continuación, ver Brochure.jsx), en los dos temas: números en blanco y
+  // celeste.
+  const blancoHex = '#FFFFFF';
+  const [alianzasOpen, setAlianzasOpen] = useState(false);
   const stats = [
     {
       id: 'proyectos',
       // Las tres cifras salen de la base de proyectos con evidencia
       // (proyectosData.js), así siempre coinciden con Proyectos y Presencia.
       value: PROYECTOS_AT.length,
-      color: 'text-[#003366] dark:text-white',
-      hex: navyHex,
-      icon: Briefcase
+      color: 'text-white',
+      hex: blancoHex,
+      icon: Briefcase,
+      onClick: () => onNavigate('proyectos')
     },
     {
       id: 'clientes',
-      value: totalClientes,
-      color: 'text-[#0077C8]',
-      hex: '#0077C8',
-      icon: Building2
+      value: totalAliados,
+      color: 'text-[#7dd3fc]',
+      hex: '#7dd3fc',
+      icon: Handshake,
+      // Abre la ventana de Alianzas estratégicas (antes la sección de
+      // Organismos y Socios debajo de las Cifras).
+      onClick: () => setAlianzasOpen(true)
     },
     {
       id: 'paises',
       value: paisesAtendidos,
-      color: 'text-[#003366] dark:text-white',
-      hex: navyHex,
-      icon: Globe2
+      color: 'text-white',
+      hex: blancoHex,
+      icon: Globe2,
+      onClick: () => onNavigate('presencia')
     }
   ];
 
@@ -227,15 +245,15 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="px-4 sm:px-6 py-10 sm:py-16 bg-[#D6E9F7] dark:bg-[#001F3D] border-y border-slate-100 dark:border-white/10">
+    <section ref={sectionRef} className="relative px-4 sm:px-6 pt-6 pb-12 sm:pt-10 sm:pb-16 text-white">
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-1 sm:mb-1.5">
-          <KickerBadge variant="glow">{t.stats.kicker}</KickerBadge>
+          <KickerBadge variant="glow" onDark>{t.stats.kicker}</KickerBadge>
         </div>
-        <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-[#003366] dark:text-[#9FC6E8] tracking-tight mb-2">
+        <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-white tracking-tight mb-2">
           {t.stats.title}
         </h2>
-        <div className="inline-block px-2.5 py-0.5 rounded-md bg-[#EAF3FB] dark:bg-white/10 text-[#003366] dark:text-[#9FC6E8] text-[0.5625rem] sm:text-[0.625rem] font-mono-code font-bold tracking-wider uppercase mb-8">
+        <div className="inline-block px-2.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-[#D6E9F7] text-[0.5625rem] sm:text-[0.625rem] font-mono-code font-bold tracking-wider uppercase mb-8">
           {t.stats.badge}
         </div>
 
@@ -258,10 +276,13 @@ export default function StatsSection() {
               // (enterDelay) va escalonada.
               duration={STAT_COUNT_DURATION}
               enterDelay={idx * 120}
+              onClick={item.onClick}
             />
           ))}
         </div>
       </div>
+
+      <AlliancesSheet isOpen={alianzasOpen} onClose={() => setAlianzasOpen(false)} onNavigate={onNavigate} />
     </section>
   );
 }

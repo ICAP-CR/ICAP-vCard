@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 // Secciones del brochure (id, nombre, ícono): única fuente para el menú
-// inferior (Brochure.jsx) y los accesos rápidos del Hero. Autoridades y
+// inferior (Brochure.jsx). Autoridades y
 // Contacto van al final, igual que en DOCENCIA_PAGES.
 export const PAGES = [
   { id: 'inicio', label: 'Inicio', icon: Home },

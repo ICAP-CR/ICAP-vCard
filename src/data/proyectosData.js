@@ -1307,3 +1307,9 @@ export const proyectosDeSocio = (socio) => {
   const patron = SOCIO_PATRON[socio];
   return patron ? PROYECTOS_AT.filter((p) => patron.test(p.cliente)) : [];
 };
+
+// Aliados estratégicos (tarjeta de Cifras y ventana de Alianzas): los
+// socios de SOCIOS que tienen al menos un proyecto en la base. Es un
+// número distinto de totalClientes, que cuenta a todas las instituciones
+// cliente (ministerios, municipalidades, etc.).
+export const totalAliados = SOCIOS.filter((s) => proyectosDeSocio(s).length > 0).length;
