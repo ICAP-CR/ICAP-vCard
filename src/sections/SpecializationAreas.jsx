@@ -45,7 +45,10 @@ const recientesDe = (id) =>
     .sort((a, b) => b.desde.localeCompare(a.desde))
     .slice(0, 3);
 
-export default function SpecializationAreas({ onNavigate }) {
+// `estadoInicial` llega al volver atrás desde Proyectos (Brochure.jsx):
+// { area } es el id del área que estaba abierta al salir, para reabrir
+// esa misma y no la de por defecto.
+export default function SpecializationAreas({ onNavigate, estadoInicial = null }) {
   const { t, lang } = useLanguage();
   const tA = t.specializationAreas;
   const nombre = (e) => e[lang === 'en' ? 'en' : 'es'];
@@ -53,10 +56,15 @@ export default function SpecializationAreas({ onNavigate }) {
 
   // `adelante`: hacia qué lado se va la ficha vieja. Por defecto según el
   // orden, pero al pasar de la 14 a la 1 (o al revés) se indica a mano.
-  const [vista, setVista] = useState({ abierta: DEFAULT_AREA_INDEX, adelante: true });
+  const indiceGuardado = AREAS.findIndex((a) => a.id === estadoInicial?.area);
+  const [vista, setVista] = useState({
+    abierta: indiceGuardado >= 0 ? indiceGuardado : DEFAULT_AREA_INDEX,
+    adelante: true
+  });
   const abierta = vista.abierta;
   const pausadoRef = useRef(false);
-  const eligioRef = useRef(false);
+  // Al volver a un área guardada no corre el auto-avance: se queda en ella.
+  const eligioRef = useRef(indiceGuardado >= 0);
   const abiertaRef = useRef(abierta);
 
   const cambiar = (i, adelante = i > abiertaRef.current) => {
@@ -91,6 +99,10 @@ export default function SpecializationAreas({ onNavigate }) {
   // En la tira de celular, la cápsula elegida (a mano o por el auto-avance)
   // se centra sola. Sólo se mueve la tira de lado, nunca la página.
   const ficheroRef = useRef(null);
+
+  // Al ir a Proyectos se avisa qué área estaba abierta, para poder volver
+  // a ella.
+  const irA = (id, filtro) => onNavigate?.(id, filtro, { area: AREAS[abiertaRef.current].id });
   useEffect(() => {
     const tira = ficheroRef.current;
     if (!tira || tira.scrollWidth <= tira.clientWidth + 1) return;
@@ -167,7 +179,7 @@ export default function SpecializationAreas({ onNavigate }) {
               recientes={recientes}
               lang={lang}
               tA={tA}
-              onNavigate={onNavigate}
+              onNavigate={irA}
               onCambiar={elegir}
             />
           </div>

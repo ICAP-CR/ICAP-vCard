@@ -120,8 +120,12 @@ export default function Brochure({
   // Socios mandan ahí con la etiqueta, el país o el socio ya elegido (ver
   // ProyectosAT.jsx). Navegar desde el menú lo deja vacío.
   const [filtroProyectos, setFiltroProyectos] = useState(null);
+  // `estadoPagina`: lo que una sección necesita para quedar como estaba al
+  // volver atrás (p. ej. el área abierta en Áreas). Sólo lo pone volver.
+  const [estadoPagina, setEstadoPagina] = useState(null);
   const goToPage = (id, filtro = null) => {
     setFiltroProyectos(filtro);
+    setEstadoPagina(null);
     setActivePage(id);
   };
 
@@ -134,13 +138,14 @@ export default function Brochure({
   // history del navegador, así el botón "atrás" del navegador o del
   // teléfono hace lo mismo en vez de sacarlo a uno de la página. Navegar
   // con el menú (o cambiar de departamento) descarta el historial.
-  const historialRef = useRef([]); // [{ page, filtro, scroll }]
+  const historialRef = useRef([]); // [{ page, filtro, scroll, estado }]
   const [volverA, setVolverA] = useState(null); // sección a la que se vuelve
   const restaurarScrollRef = useRef(null);
   const popIgnoradoRef = useRef(null); // { despues } mientras se descarta el history
 
-  const irDesdeContenido = (id, filtro = null) => {
-    historialRef.current.push({ page: activePage, filtro: filtroProyectos, scroll: mainRef.current?.scrollTop || 0 });
+  // `estado`: lo que la sección de origen quiere recuperar al volver.
+  const irDesdeContenido = (id, filtro = null, estado = null) => {
+    historialRef.current.push({ page: activePage, filtro: filtroProyectos, scroll: mainRef.current?.scrollTop || 0, estado });
     setVolverA(activePage);
     try {
       window.history.pushState({ icapVolver: historialRef.current.length }, '');
@@ -157,6 +162,7 @@ export default function Brochure({
     setVolverA(pila.length ? pila[pila.length - 1].page : null);
     restaurarScrollRef.current = anterior.scroll;
     setFiltroProyectos(anterior.filtro);
+    setEstadoPagina(anterior.estado || null);
     setActivePage(anterior.page);
   };
 
@@ -435,7 +441,7 @@ export default function Brochure({
       case 'autoridades':
         return <AuthoritiesSection dept={activeDept} />;
       case 'areas':
-        return <SpecializationAreas onNavigate={irDesdeContenido} />;
+        return <SpecializationAreas onNavigate={irDesdeContenido} estadoInicial={estadoPagina} />;
       case 'presencia':
         return <RegionalMap onNavigate={irDesdeContenido} />;
       case 'proyectos':
